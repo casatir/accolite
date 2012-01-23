@@ -54,10 +54,10 @@ if __name__ == '__main__':
     if accolite.workingdir() == "":
         sys.stderr.write("It seems that you are not in a working accolite project!\n")
         exit(1)
-    builddir = accolite.absbuilddir()
-    bindir = accolite.absbindir()
-    tmpdir = accolite.abstmpdir()
-    cmakedir = accolite.abscmakedir()
+    builddir = accolite.absdir("build")
+    bindir = accolite.absdir("bin")
+    tmpdir = accolite.absdir("tmp")
+    cmakedir = accolite.absdir("cmake")
 
     if not os.path.exists(builddir):
         os.makedirs(builddir)

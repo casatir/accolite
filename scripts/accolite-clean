@@ -15,9 +15,9 @@ if __name__ == "__main__":
     if rootdir == "":
         sys.stderr.write("It seems that you are not in a working accolite project!\n")
         exit(1)
-    builddir = accolite.absbuilddir()
-    bindir = accolite.absbindir()
-    tmpdir = accolite.abstmpdir()
+    builddir = accolite.absdir("build")
+    bindir = accolite.absdir("bin")
+    tmpdir = accolite.absdir("tmp")
     if os.path.isdir(builddir):
         sys.stdout.write("Deleting " + builddir + "... ");
         shutil.rmtree(builddir)

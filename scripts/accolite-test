@@ -51,8 +51,8 @@ if __name__ == '__main__':
     if accolite.workingdir() == "":
         sys.stderr.write("It seems that you are not in a working accolite project!\n")
         exit(1)
-    builddir = accolite.absbuilddir()
-    cmakedir = accolite.abscmakedir()
+    builddir = accolite.absdir("build")
+    cmakedir = accolite.absdir("cmake")
 
     # Launch tests
     ctestargs.insert(0, "-S")

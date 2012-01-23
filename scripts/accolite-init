@@ -39,9 +39,11 @@ if __name__ == '__main__':
     rootdir = argv[0]
     accolitedir = os.path.abspath(os.path.join(rootdir, ".accolite"))
     os.makedirs(accolitedir)
+    # Project name
+    projectname = os.path.basename(os.path.abspath(rootdir))
     # Put the config file inside .accolite
     if configfile == "":
-        configxml = accolite.defaultxml(os.path.basename(accolitedir))
+        configxml = accolite.defaultxml(projectname)
     else:
         configxml = parse(configfile)
     configxmlfile = open(os.path.abspath(os.path.join(accolitedir, "config.xml")), 'w')
@@ -52,9 +54,22 @@ if __name__ == '__main__':
     os.chdir(rootdir)
 
     # Creates dirs
-    os.makedirs(accolite.abscmakedir())
-    os.makedirs(accolite.abssrcdir())
-    os.makedirs(accolite.abstestsdir())
-    os.makedirs(accolite.absexamplesdir())
-    os.makedirs(accolite.absdocdir())
+    testsdir = accolite.absdir("tests")
+    cmakedir = accolite.absdir("cmake")
+    os.makedirs(cmakedir)
+    os.makedirs(accolite.absdir("src"))
+    os.makedirs(testsdir)
+    os.makedirs(accolite.absdir("examples"))
+    os.makedirs(accolite.absdir("doc"))
     
+    # Populating tests dir
+    testrunner = open(os.path.abspath(os.path.join(testsdir, "TestRunner.h")), 'w')
+    testrunner.write(accolite.testrunnerstring())
+    testrunner.close()
+    exampletest = open(os.path.abspath(os.path.join(testsdir, "ExampleTest.cpp")), 'w')
+    exampletest.write(accolite.examplesstring())
+    exampletest.close()
+
+    # Populating cmakedir
+    valgrindsupp = open(os.path.abspath(os.path.join(cmakedir, "valgrind.supp")), 'w')
+    valgrindsupp.close()

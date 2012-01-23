@@ -7,7 +7,6 @@ import xml.dom.minidom
 
 # Levenstein score function
 def levenshtein(a,b):
-    "Calculates the Levenshtein distance between a and b."
     n, m = len(a), len(b)
     if n > m:
         # Make sure n <= m, to use O(min(n,m)) space
@@ -39,6 +38,16 @@ def levenshteinbestmatch(expr, possibles):
     return minExp
 
 
+# Return possible accolite commands
+def availablecommands():
+    commands = []
+    for path in os.path.expandvars("$PATH").split(":"):
+        for cmd in os.listdir(path):
+            if cmd.startswith("accolite-"):
+                commands.append(cmd[len("accolite-"):])
+    return commands
+
+
 # Get working project dir
 def workingdir():
     prevpath = ""
@@ -51,108 +60,32 @@ def workingdir():
     return currentpath
 
 
-# Get cmake dir
-def relativecmakedir():
+# Get the relative path of a project dir
+def relativedir(directory):
     configxml = xml.dom.minidom.parse(os.path.join(workingdir(),
                                                    ".accolite","config.xml"))
-    return configxml.getElementsByTagName("cmakedir")[0].firstChild.data
+    return configxml.getElementsByTagName(directory + "dir")[0].firstChild.data
 
-# Get cmake dir absolute path
-def abscmakedir():
-    return os.path.join(workingdir(), relativecmakedir())
+# Get the absolute path of a project dir
+def absdir(directory):
+    return os.path.join(workingdir(), relativedir(directory))
 
 
-# Get build dir
-def relativebuilddir():
+# Get the relative path of a project dir
+def projectname():
     configxml = xml.dom.minidom.parse(os.path.join(workingdir(),
                                                    ".accolite","config.xml"))
-    return configxml.getElementsByTagName("builddir")[0].firstChild.data
-
-# Get build dir absolute path
-def absbuilddir():
-    return os.path.join(workingdir(), relativebuilddir())
-
-
-# Get bin dir
-def relativebindir():
-    configxml = xml.dom.minidom.parse(os.path.join(workingdir(),
-                                                   ".accolite","config.xml"))
-    return configxml.getElementsByTagName("bindir")[0].firstChild.data
-
-# Get bin dir absolute path
-def absbindir():
-    return os.path.join(workingdir(), relativebindir())
-
-
-# Get tests dir
-def relativetestsdir():
-    configxml = xml.dom.minidom.parse(os.path.join(workingdir(),
-                                                   ".accolite","config.xml"))
-    return configxml.getElementsByTagName("testsdir")[0].firstChild.data
-
-# Get tests dir absolute path
-def abstestsdir():
-    return os.path.join(workingdir(), relativetestsdir())
-
-
-# Get examples dir
-def relativeexamplesdir():
-    configxml = xml.dom.minidom.parse(os.path.join(workingdir(),
-                                                   ".accolite","config.xml"))
-    return configxml.getElementsByTagName("examplesdir")[0].firstChild.data
-
-# Get examples dir absolute path
-def absexamplesdir():
-    return os.path.join(workingdir(), relativeexamplesdir())
-
-
-# Get src dir
-def relativesrcdir():
-    configxml = xml.dom.minidom.parse(os.path.join(workingdir(),
-                                                   ".accolite","config.xml"))
-    return configxml.getElementsByTagName("srcdir")[0].firstChild.data
-
-# Get src dir absolute path
-def abssrcdir():
-    return os.path.join(workingdir(), relativesrcdir())
-
-
-# Get doc dir
-def relativedocdir():
-    configxml = xml.dom.minidom.parse(os.path.join(workingdir(),
-                                                   ".accolite","config.xml"))
-    return configxml.getElementsByTagName("docdir")[0].firstChild.data
-
-# Get doc dir absolute path
-def absdocdir():
-    return os.path.join(workingdir(), relativedocdir())
-
-
-# Get tmp dir
-def relativetmpdir():
-    configxml = xml.dom.minidom.parse(os.path.join(workingdir(),
-                                                   ".accolite","config.xml"))
-    return configxml.getElementsByTagName("tmpdir")[0].firstChild.data
-
-# Get tmp dir absolute path
-def abstmpdir():
-    return os.path.join(workingdir(), relativetmpdir())
-
-
-# Return possible accolite commands
-def availablecommands():
-    commands = []
-    for path in os.path.expandvars("$PATH").split(":"):
-        for cmd in os.listdir(path):
-            if cmd.startswith("accolite-"):
-                commands.append(cmd[len("accolite-"):])
-    return commands
+    return configxml.getElementsByTagName("projectname")[0].firstChild.data
 
 
 # Create a minidom xml default config file
 def defaultxml(projectname):
     configxml = xml.dom.minidom.getDOMImplementation().createDocument(None, "accoliteconfig", None)
     rootnode = configxml.childNodes[0]
+    # Project name
+    newnode = configxml.createElement("projectname")
+    newnode.appendChild(configxml.createTextNode(projectname))
+    rootnode.appendChild(newnode)
     # Cmake dir
     newnode = configxml.createElement("cmakedir")
     newnode.appendChild(configxml.createTextNode("cmake"))
@@ -187,3 +120,43 @@ def defaultxml(projectname):
     rootnode.appendChild(newnode)
     return configxml
     
+def testrunnerstring():
+    return ("#include <cppunit/extensions/TestFactoryRegistry.h>\n"
+            + "#include <cppunit/TextTestRunner.h>\n"
+            + "int main( int argc, char **argv)\n"
+            + "{\n"
+            + "     CppUnit::TextTestRunner runner;\n"
+            + "     CppUnit::TestFactoryRegistry &registry = CppUnit::TestFactoryRegistry::getRegistry();\n"
+            + "     runner.addTest( registry.makeTest() );\n"
+            + "     return !runner.run( "", false );\n"
+            + "}\n")
+
+
+def examplesstring():
+    projectnameupper = projectname().upper()
+    return ("#include <cppunit/extensions/HelperMacros.h>\n"
+            + "\n"
+            + "#define " + projectnameupper + "_TEST_NAME ExampleTest\n"
+            + "\n"
+            + "class " + projectnameupper + "_TEST_NAME : public CppUnit::TestFixture\n"
+            + "{\n"
+            + "     \n"
+            + "     CPPUNIT_TEST_SUITE( " + projectnameupper + "_TEST_NAME );\n"
+            + "     CPPUNIT_TEST( test );\n"
+            + "     CPPUNIT_TEST_SUITE_END();\n"
+            + "     \n"
+            + "public:\n"
+            + "     inline void setUp() {\n"
+            + "     }\n"
+            + "     \n"
+            + "     inline void tearDown() {\n"
+            + "     }\n"
+            + "     inline void test() {\n"
+            + "	  CPPUNIT_ASSERT( true );\n"
+            + "     }\n"
+            + "     \n"
+            + "};\n"
+            + "\n"
+            + "CPPUNIT_TEST_SUITE_REGISTRATION( " + projectnameupper + "_TEST_NAME );\n"
+            + "\n"
+            + "#include \"TestRunner.h\"\n")
