@@ -3,31 +3,21 @@
 import sys
 import os.path
 import shutil
+import accolite
 
 # Usage function
 def usage(stream):
     stream.write("Usage: accolite-clean\n")
-
-# Get working project dir
-def workingdir():
-    prevpath = ""
-    currentpath = os.path.abspath(os.path.curdir)
-    while not ( os.path.isdir(os.path.join(currentpath, ".accolite")) or currentpath == prevpath ):
-        prevpath = currentpath
-        currentpath = os.path.abspath(os.path.join(currentpath, os.path.pardir))
-    if currentpath == prevpath and not os.path.isdir(os.path.join(currentpath, ".accolite")):
-        return ""
-    return currentpath
     
 
 if __name__ == "__main__":
-    rootdir = workingdir()
+    rootdir = accolite.workingdir()
     if rootdir == "":
         sys.stderr.write("It seems that you are not in a working accolite project!\n")
         exit(1)
-    builddir = os.path.abspath(os.path.join(rootdir, "build"))
-    bindir = os.path.abspath(os.path.join(rootdir, "bin"))
-    tmpdir = os.path.abspath(os.path.join(rootdir, "tmp"))
+    builddir = accolite.absbuilddir()
+    bindir = accolite.absbindir()
+    tmpdir = accolite.abstmpdir()
     if os.path.isdir(builddir):
         sys.stdout.write("Deleting " + builddir + "... ");
         shutil.rmtree(builddir)

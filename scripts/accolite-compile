@@ -4,6 +4,7 @@ import sys
 import os
 import multiprocessing
 import subprocess
+import accolite
 
 # Usage function
 def usage(stream):
@@ -13,17 +14,6 @@ def usage(stream):
     stream.write("--build-type, -b <type>: \t Specify a build type in Release RelWithDebInfo Debug DebugFull. Default is Release.\n")
     stream.write("--cmake-args, -c <args>: \t Specify arguments to pass to cmake. Default is \"-DCMAKE_BUILD_TYPE=<type-passed-to-b-option>\"\n")
     stream.write("--make-args, -m <args> : \t Specify arguments to pass to make. Default is \"-j<number-of-core+1> install\".\n")
-    
-# Get working project dir
-def workingdir():
-    prevpath = ""
-    currentpath = os.path.abspath(os.path.curdir)
-    while not ( os.path.isdir(os.path.join(currentpath, ".accolite")) or currentpath == prevpath ):
-        prevpath = currentpath
-        currentpath = os.path.abspath(os.path.join(currentpath, os.path.pardir))
-    if currentpath == prevpath and not os.path.isdir(os.path.join(currentpath, ".accolite")):
-        return ""
-    return currentpath
 
 
 if __name__ == '__main__':
@@ -49,6 +39,7 @@ if __name__ == '__main__':
         else:
             sys.stderr.write("Unknown option " + argv[0] + "!")
             usage(sys.stderr)
+            exit(1)
         # Shift argument
         argv = argv[1:]
 
@@ -59,12 +50,14 @@ if __name__ == '__main__':
     # Install lib
     makeargs.append("install")
 
-    # Get working dir
-    rootdir = workingdir()
-    builddir = os.path.abspath(os.path.join(rootdir, "build"))
-    bindir = os.path.abspath(os.path.join(rootdir, "bin"))
-    tmpdir = os.path.abspath(os.path.join(rootdir, "tmp"))
-    cmakedir = os.path.abspath(os.path.join(rootdir, "cmake"))
+    # Get working dir    
+    if accolite.workingdir() == "":
+        sys.stderr.write("It seems that you are not in a working accolite project!\n")
+        exit(1)
+    builddir = accolite.absbuilddir()
+    bindir = accolite.absbindir()
+    tmpdir = accolite.abstmpdir()
+    cmakedir = accolite.abscmakedir()
 
     if not os.path.exists(builddir):
         os.makedirs(builddir)

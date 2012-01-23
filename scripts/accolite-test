@@ -4,6 +4,7 @@ import sys
 import os.path
 import subprocess
 import multiprocessing
+import accolite
 
 # Usage function
 def usage(stream):
@@ -13,17 +14,6 @@ def usage(stream):
     stream.write("--clean-before, -c       : \t Run clean-me first.\n")
     stream.write("--exclude-tests, -e <exp>: \t Exclude all tests whose names matchs regular expression <exp>.\n")
     stream.write("--only-test, -o <exp>    : \t Execute only tests whose names matchs regular expression <exp>.\n")
-
-# Get working project dir
-def workingdir():
-    prevpath = ""
-    currentpath = os.path.abspath(os.path.curdir)
-    while not ( os.path.isdir(os.path.join(currentpath, ".accolite")) or currentpath == prevpath ):
-        prevpath = currentpath
-        currentpath = os.path.abspath(os.path.join(currentpath, os.path.pardir))
-    if currentpath == prevpath and not os.path.isdir(os.path.join(currentpath, ".accolite")):
-        return ""
-    return currentpath
 
 
 if __name__ == '__main__':
@@ -49,6 +39,7 @@ if __name__ == '__main__':
         else:
             sys.stderr.write("Unknown option " + argv[0] + "!")
             usage(sys.stderr)
+            exit(1)
         # Shift argument
         argv = argv[1:]
 
@@ -56,10 +47,12 @@ if __name__ == '__main__':
     if cleanbefore:
         subprocess.call("accolite-clean")
 
-    # Get working dir
-    rootdir = workingdir()
-    builddir = os.path.abspath(os.path.join(rootdir, "build"))
-    cmakedir = os.path.abspath(os.path.join(rootdir, "cmake"))
+    # Get working dir   
+    if accolite.workingdir() == "":
+        sys.stderr.write("It seems that you are not in a working accolite project!\n")
+        exit(1)
+    builddir = accolite.absbuilddir()
+    cmakedir = accolite.abscmakedir()
 
     # Launch tests
     ctestargs.insert(0, "-S")
