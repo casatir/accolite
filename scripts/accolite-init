@@ -73,3 +73,6 @@ if __name__ == '__main__':
     # Populating cmakedir
     valgrindsupp = open(os.path.abspath(os.path.join(cmakedir, "valgrind.supp")), 'w')
     valgrindsupp.close()
+    pathdefinitions = open(os.path.abspath(os.path.join(cmakedir, "PathDefinitions.cmake")), 'w')
+    pathdefinitions.write(accolite.pathdefinitionsstring())
+    pathdefinitions.close()
