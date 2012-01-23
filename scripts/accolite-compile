@@ -1,0 +1,84 @@
+#!/usr/bin/env python
+
+import sys
+import os
+import multiprocessing
+import subprocess
+
+# Usage function
+def usage(stream):
+    stream.write("Usage: accolite-compile [Options]\n")
+    stream.write("Options:\n")
+    stream.write("--help, -h             : \t This help message.\n")
+    stream.write("--build-type, -b <type>: \t Specify a build type in Release RelWithDebInfo Debug DebugFull. Default is Release.\n")
+    stream.write("--cmake-args, -c <args>: \t Specify arguments to pass to cmake. Default is \"-DCMAKE_BUILD_TYPE=<type-passed-to-b-option>\"\n")
+    stream.write("--make-args, -m <args> : \t Specify arguments to pass to make. Default is \"-j<number-of-core+1> install\".\n")
+    
+# Get working project dir
+def workingdir():
+    prevpath = ""
+    currentpath = os.path.abspath(os.path.curdir)
+    while not ( os.path.isdir(os.path.join(currentpath, ".accolite")) or currentpath == prevpath ):
+        prevpath = currentpath
+        currentpath = os.path.abspath(os.path.join(currentpath, os.path.pardir))
+    if currentpath == prevpath and not os.path.isdir(os.path.join(currentpath, ".accolite")):
+        return ""
+    return currentpath
+
+
+if __name__ == '__main__':
+    # Preset options
+    buildtype = "Release"
+    cmakeargs = []
+    makeargs = []
+    # Get options
+    argv = sys.argv[1:]
+    while len(argv) > 0 and argv[0].startswith("-"):
+        if argv[0] in ["--help","-h"]:
+            usage(sys.stdout)
+            exit(0)
+        elif argv[0] in ["--build-type","-b"]:
+            argv = argv[1:]
+            buildtype = argv[0]
+        elif argv[0] in ["--cmake-args","-c"]:
+            argv = argv[1:]
+            cmakeargs.append(argv[0])
+        elif argv[0] in ["--make-args","-m"]:
+            argv = argv[1:]
+            makeargs.append(argv[0])
+        else:
+            sys.stderr.write("Unknown option " + argv[0] + "!")
+            usage(sys.stderr)
+        # Shift argument
+        argv = argv[1:]
+
+    # Set build type
+    cmakeargs.insert(0,"-DCMAKE_BUILD_TYPE=" + buildtype)
+    # Get nbthreads +1
+    makeargs.insert(0, "-j" + str(multiprocessing.cpu_count()+1))
+    # Install lib
+    makeargs.append("install")
+
+    # Get working dir
+    rootdir = workingdir()
+    builddir = os.path.abspath(os.path.join(rootdir, "build"))
+    bindir = os.path.abspath(os.path.join(rootdir, "bin"))
+    tmpdir = os.path.abspath(os.path.join(rootdir, "tmp"))
+    cmakedir = os.path.abspath(os.path.join(rootdir, "cmake"))
+
+    if not os.path.exists(builddir):
+        os.makedirs(builddir)
+    if not os.path.exists(bindir):
+        os.makedirs(bindir)
+    if not os.path.exists(tmpdir):
+        os.makedirs(tmpdir)
+
+    # Set lasts arguments
+    cmakeargs.insert(0, "cmake")
+    cmakeargs.append(cmakedir)
+    makeargs.insert(0, "make")
+    sys.stdout.write("Runing cmake inside " + builddir + "\n")
+    if subprocess.Popen(cmakeargs, cwd=builddir).wait() == 0:
+        sys.stdout.write("Runing make\n")
+        subprocess.Popen(makeargs, cwd=builddir).wait()
+

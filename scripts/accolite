@@ -1,0 +1,86 @@
+#!/usr/bin/env python
+
+import sys
+import os
+import posixpath
+import subprocess
+import string
+
+# The usage function
+def usage(ostream):
+    ostream.write("Usage: accolite <command> [<args>]\n\n")
+    ostream.write("Possible accolite commands are:\n")
+    ostream.write("clean\tClean the working project\n")
+    ostream.write("compile\tCompile the working project\n")
+    ostream.write("init\tInitialize a new working project\n")
+    ostream.write("test\tRun tests on the working project\n")
+    ostream.write("update\tUpdate the working project version of accolite\n")
+
+# Return possible accolite commands
+def possiblecommands():
+    commands = []
+    for path in posixpath.expandvars("$PATH").split(":"):
+        for cmd in os.listdir(path):
+            if cmd.startswith("accolite-"):
+                commands.append(cmd[len("accolite-"):])
+    return commands
+
+# Levenstein score function
+def levenshtein(a,b):
+    "Calculates the Levenshtein distance between a and b."
+    n, m = len(a), len(b)
+    if n > m:
+        # Make sure n <= m, to use O(min(n,m)) space
+        a,b = b,a
+        n,m = m,n
+        
+    current = range(n+1)
+    for i in range(1,m+1):
+        previous, current = current, [i]+[0]*n
+        for j in range(1,n+1):
+            add, delete = previous[j]+1, current[j-1]+1
+            change = previous[j-1]
+            if a[j-1] != b[i-1]:
+                change = change + 1
+            current[j] = min(add, delete, change)
+            
+    return current[n]
+
+# Best possibility for an expr in a list
+def bestmatch(expr, possibles):
+    minExp = possibles[0]
+    min = levenshtein(expr, minExp)
+    for e in possibles:
+        score = levenshtein(expr,e)
+        if score < min:
+            min = score
+            minExp = e
+    return minExp
+
+if __name__ == '__main__':
+    # Get options
+    argv = sys.argv[1:]
+    while len(argv) > 0 and argv[0].startswith("-"):
+        if argv[0] in ["--help","-h"]:
+            usage(sys.stdout)
+            exit(0)
+        # Shift argument
+        argv = argv[1:]
+
+    # Check if accolite is called on a command
+    if len(argv) == 0:
+        usage(sys.stderr)
+        exit(1)
+
+    # Get the command
+    command = argv[0]
+    accolitecommands = possiblecommands()
+    # Check if the command is valide
+    if command not in accolitecommands:
+        sys.stderr.write("accolite: '" + command + "' is not a valid accolite command. See accolite --help.\n")
+        sys.stderr.write("Did you mean '" + bestmatch(command, accolitecommands) + "'?\n")
+        exit(2)
+
+    # Call the corresponding command
+    argv[0] = "accolite-" + argv[0]
+    subprocess.call(argv)
