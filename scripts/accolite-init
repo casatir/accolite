@@ -11,7 +11,8 @@ def usage(stream):
     stream.write("--help, -h                  : \t This help message.\n")
     stream.write("--config-file, -c <xml file>: \t Give a configuration file for initialize the project.\n")
 
-if __name__ == '__main__':
+
+def main():
     # Preset options
     configfile = ""
     # Get options
@@ -19,21 +20,21 @@ if __name__ == '__main__':
     while len(argv) > 0 and argv[0].startswith("-"):
         if argv[0] in ["--help","-h"]:
             usage(sys.stdout)
-            exit(0)
+            return 0
         elif argv[0] in ["--config-file","-c"]:
             argv = argv[1:]
             configfile = argv[0]
         else:
             sys.stderr.write("Unknown option " + argv[0] + "!")
             usage(sys.stderr)
-            exit(1)
+            return 1
         # Shift argument
         argv = argv[1:]
 
     if len(argv) == 0:
         sys.stderr.write("Mandatory argument <working dir> not found.\n")
         usage(sys.stderr)
-        exit(1)
+        return 1
 
     # Set dirs
     rootdir = argv[0]
@@ -76,3 +77,7 @@ if __name__ == '__main__':
     pathdefinitions = open(os.path.abspath(os.path.join(cmakedir, "PathDefinitions.cmake")), 'w')
     pathdefinitions.write(accolite.pathdefinitionsstring())
     pathdefinitions.close()
+
+
+if __name__ == '__main__':
+    sys.exit(main())
