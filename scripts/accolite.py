@@ -38,15 +38,23 @@ def levenshteinbestmatch(expr, possibles):
     return minExp
 
 
+# Get accolite install directory
+def accoliteinstalldir():
+    return os.path.dirname(sys.argv[0])
+
+
 # Return possible accolite commands
 def availablecommands():
     commands = []
-    for path in os.path.expandvars("$PATH").split(":"):
-        for cmd in os.listdir(path):
-            if cmd.startswith("accolite-"):
-                commands.append(cmd[len("accolite-"):])
+    for cmd in os.listdir(accoliteinstalldir()):
+        if cmd.startswith("accolite-"):
+            commands.append(cmd[len("accolite-"):])
     return commands
 
+
+# From an accolite commande to the path of its script
+def scriptofcommand(cmd):
+    return os.path.join(accoliteinstalldir(), "accolite-" + cmd)
 
 # Get working project dir
 def workingdir():
