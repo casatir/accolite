@@ -3,8 +3,13 @@
 import sys
 import accolite
 
-if __name__ == '__main__':   
+
+def main(): 
     if accolite.workingdir() == "":
         sys.stderr.write("It seems that you are not in a working accolite project!\n")
-        exit(1)
+        return 1
     sys.stderr.write("accolite-update not yet implemented!\n")
+
+
+if __name__ == '__main__':
+    sys.exit(main())

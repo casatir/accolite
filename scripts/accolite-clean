@@ -10,11 +10,11 @@ def usage(stream):
     stream.write("Usage: accolite-clean\n")
     
 
-if __name__ == "__main__":
+def main():
     rootdir = accolite.workingdir()
     if rootdir == "":
         sys.stderr.write("It seems that you are not in a working accolite project!\n")
-        exit(1)
+        return 1
     builddir = accolite.absdir("build")
     bindir = accolite.absdir("bin")
     tmpdir = accolite.absdir("tmp")
@@ -31,3 +31,6 @@ if __name__ == "__main__":
         shutil.rmtree(tmpdir)
         sys.stdout.write("Done.\n");
     
+
+if __name__ == "__main__":
+    sys.exit(main)

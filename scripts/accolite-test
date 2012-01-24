@@ -15,8 +15,7 @@ def usage(stream):
     stream.write("--exclude-tests, -e <exp>: \t Exclude all tests whose names matchs regular expression <exp>.\n")
     stream.write("--only-test, -o <exp>    : \t Execute only tests whose names matchs regular expression <exp>.\n")
 
-
-if __name__ == '__main__':
+def main():
     # Preset options
     cleanbefore = False
     ctestargs = []
@@ -25,7 +24,7 @@ if __name__ == '__main__':
     while len(argv) > 0 and argv[0].startswith("-"):
         if argv[0] in ["--help","-h"]:
             usage(sys.stdout)
-            exit(0)
+            return 1
         elif argv[0] in ["--clean-before","-c"]:
             cleanbefore = True
         elif argv[0] in ["--exclude-tests","-e"]:
@@ -39,7 +38,7 @@ if __name__ == '__main__':
         else:
             sys.stderr.write("Unknown option " + argv[0] + "!")
             usage(sys.stderr)
-            exit(1)
+            return 1
         # Shift argument
         argv = argv[1:]
 
@@ -50,7 +49,7 @@ if __name__ == '__main__':
     # Get working dir   
     if accolite.workingdir() == "":
         sys.stderr.write("It seems that you are not in a working accolite project!\n")
-        exit(1)
+        return 1
     builddir = accolite.absdir("build")
     cmakedir = accolite.absdir("cmake")
 
@@ -64,5 +63,10 @@ if __name__ == '__main__':
 
     # Compile in debug mode
     if subprocess.call([accolite.scriptofcommand("compile"),"-b","Debug"]) == 0:
-        subprocess.Popen(ctestargs, cwd = builddir).wait()
+        return subprocess.Popen(ctestargs, cwd = builddir).wait()
+    else:
+        return 3
 
+
+if __name__ == '__main__':
+    sys.exit(main())
