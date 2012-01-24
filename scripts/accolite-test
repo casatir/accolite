@@ -55,7 +55,7 @@ if __name__ == '__main__':
     cmakedir = accolite.absdir("cmake")
 
     # Launch tests
-    ctestargs.insert(0, "-S")
+    ctestargs.append("-S")
     ctestargs.append(os.path.abspath(os.path.join(cmakedir, "CTestDashboard.cmake")))
     ctestargs.insert(0, "--output-on-failure")
     ctestargs.insert(0, "-V")
