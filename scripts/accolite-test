@@ -45,7 +45,7 @@ if __name__ == '__main__':
 
     # Clean before?
     if cleanbefore:
-        subprocess.call("accolite-clean")
+        subprocess.call(accolite.scriptofcommand("clean"))
 
     # Get working dir   
     if accolite.workingdir() == "":
@@ -63,6 +63,6 @@ if __name__ == '__main__':
     ctestargs.insert(0, "ctest")
 
     # Compile in debug mode
-    if subprocess.call(["accolite-compile","-b","Debug"]) == 0:
+    if subprocess.call([accolite.scriptofcommand("compile"),"-b","Debug"]) == 0:
         subprocess.Popen(ctestargs, cwd = builddir).wait()
 

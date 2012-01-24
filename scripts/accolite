@@ -48,5 +48,5 @@ if __name__ == '__main__':
         exit(2)
 
     # Call the corresponding command
-    argv[0] = "accolite-" + argv[0]
+    argv[0] = accolite.scriptofcommand(argv[0])
     subprocess.call(argv)
