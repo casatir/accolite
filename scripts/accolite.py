@@ -378,7 +378,8 @@ def stringfile(filename):
                 + "  target_link_libraries( ${test_exe} " + pnamelower + " )\n"
                 + "  target_link_libraries( ${test_exe} ${CppUnit_LIBRARIES} )\n"
                 + "  include( TestsLinks.cmake )\n"
-                + "  add_test( ${test_exe} ${BIN_PATH}/${test_exe} )\n"
+                + "  add_test( ${test_exe} ${" + pnameupper
+                + "_CMD_TEST_OPTION} ${BIN_PATH}/${test_exe} )\n"
                 + "  message( \"--   ${test_exe} done\" )\n"
                 + "endforeach( test ${test_sources} )\n"
                 + "\n"
