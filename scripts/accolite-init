@@ -74,6 +74,14 @@ def main():
         filecurr.write(accolite.stringfile(filename))
         filecurr.close()
 
+    # Populating modulesdir
+    modulesdir = os.path.join(cmakedir,"Modules")
+    os.makedirs(modulesdir)
+    for filename in ["FindCppUnit.cmake","FindValgrind.cmake","FindPkgMacros.cmake"]:
+        filecurr = open(os.path.abspath(os.path.join(modulesdir, filename)), 'w')
+        filecurr.write(accolite.stringfile(filename))
+        filecurr.close()
+
 
 if __name__ == '__main__':
     sys.exit(main())
