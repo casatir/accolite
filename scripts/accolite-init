@@ -34,7 +34,7 @@ def main():
     if len(argv) == 0:
         sys.stderr.write("Mandatory argument <working dir> not found.\n")
         usage(sys.stderr)
-        return 1
+        return 2
 
     # Set dirs
     rootdir = argv[0]
