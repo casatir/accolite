@@ -136,7 +136,7 @@ def testrunnerstring():
             + "     CppUnit::TextTestRunner runner;\n"
             + "     CppUnit::TestFactoryRegistry &registry = CppUnit::TestFactoryRegistry::getRegistry();\n"
             + "     runner.addTest( registry.makeTest() );\n"
-            + "     return !runner.run( "", false );\n"
+            + "     return !runner.run( \"\", false );\n"
             + "}\n")
 
 
@@ -366,8 +366,8 @@ def cmakelistsstring():
             + "set( CMAKE_INSTALL_PREFIX ${" + pname.upper() + "_LIB_PATH} )\n"
             + "foreach( header ${lib_headers} ${lib_defs} )\n"
             + "  # To preserve dyrectory hierarchy...\n"
-            + "  string( REGEX REPLACE ${SRC_PATH}/ "" header_no_path ${header} )\n"
-            + "  string( REGEX MATCH \"(.*)[/\\]\" header_dir ${header_no_path} )\n"
+            + "  string( REGEX REPLACE ${SRC_PATH}/ \"\" header_no_path ${header} )\n"
+            + "  string( REGEX MATCH \"(.*)[/\\\\]\" header_dir ${header_no_path} )\n"
             + "  install( FILES ${header} DESTINATION include/${header_dir} )\n"
             + "endforeach( header ${lib_headers} ${lib_defs} )\n"
             + "install( TARGETS " + pname.lower() + " LIBRARY DESTINATION lib )\n"
