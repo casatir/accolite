@@ -103,7 +103,7 @@ def defaultxml(projectname):
     
 
 def stringFile(filename):
-    filePath = os.path.abspath(os.path.join(installDir(), os.path.pardir, "files", filename))
+    filePath = os.path.abspath(os.path.join(installDir(), "AccoliteFiles", filename))
     fileToRead = open(filePath, "r")
     fileString = fileToRead.read()
     fileToRead.close()
