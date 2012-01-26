@@ -27,7 +27,7 @@ def main():
         argv = argv[1:]
 
 
-    wdir = accolite.workingdir()
+    wdir = accolite.workingDir()
     if wdir == "":
         sys.stderr.write("It seems that you are not in a working accolite project!\n")
         return 2
@@ -38,20 +38,20 @@ def main():
     # Populating tests dir
     for filename in ["TestRunner.h","ExampleTest.cpp"]:
         filecurr = open(os.path.abspath(os.path.join(testsdir, filename)), 'w')
-        filecurr.write(accolite.stringfile(filename))
+        filecurr.write(accolite.stringFile(filename))
         filecurr.close()
 
     # Populating cmakedir
     for filename in ["PathsDefinitions.cmake","CMakeExamplesLists.cmake","CTestConfig.cmake","CTestDashboard.cmake","CMakeLists.txt","CMakeTestsLists.cmake"]:
         filecurr = open(os.path.abspath(os.path.join(cmakedir, filename)), 'w')
-        filecurr.write(accolite.stringfile(filename))
+        filecurr.write(accolite.stringFile(filename))
         filecurr.close()
     # Treating users files
     for filename in ["valgrind.supp","ExamplesLinks.cmake","TestsLinks.cmake","Dependencies.cmake"]:
         filepath = os.path.abspath(os.path.join(cmakedir, filename))
         if not os.path.isfile(filepath):
             filecurr = open(filepath, 'w')
-            filecurr.write(accolite.stringfile(filename))
+            filecurr.write(accolite.stringFile(filename))
             filecurr.close()
         
 
@@ -61,7 +61,7 @@ def main():
         os.makedirs(modulesdir)
     for filename in ["FindCppUnit.cmake","FindValgrind.cmake","FindPkgMacros.cmake"]:
         filecurr = open(os.path.abspath(os.path.join(modulesdir, filename)), 'w')
-        filecurr.write(accolite.stringfile(filename))
+        filecurr.write(accolite.stringFile(filename))
         filecurr.close()
 
 

@@ -11,7 +11,7 @@ def usage(stream):
     
 
 def main():
-    rootdir = accolite.workingdir()
+    rootdir = accolite.workingDir()
     if rootdir == "":
         sys.stderr.write("It seems that you are not in a working accolite project!\n")
         return 1

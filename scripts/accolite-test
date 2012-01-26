@@ -44,10 +44,10 @@ def main():
 
     # Clean before?
     if cleanbefore:
-        subprocess.call(accolite.scriptofcommand("clean"))
+        subprocess.call(accolite.scriptOfCommand("clean"))
 
     # Get working dir   
-    if accolite.workingdir() == "":
+    if accolite.workingDir() == "":
         sys.stderr.write("It seems that you are not in a working accolite project!\n")
         return 1
     builddir = accolite.absdir("build")
@@ -62,7 +62,7 @@ def main():
     ctestargs.insert(0, "ctest")
 
     # Compile in debug mode
-    if subprocess.call([accolite.scriptofcommand("compile"),"-b","Debug"]) == 0:
+    if subprocess.call([accolite.scriptOfCommand("compile"),"-b","Debug"]) == 0:
         return subprocess.Popen(ctestargs, cwd = builddir).wait()
     else:
         return 3

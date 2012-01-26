@@ -40,15 +40,15 @@ def main():
 
     # Get the command
     command = argv[0]
-    accolitecommands = accolite.availablecommands()
+    accoliteCommands = accolite.availableCommands()
     # Check if the command is valide
-    if command not in accolitecommands:
+    if command not in accoliteCommands:
         sys.stderr.write("accolite: '" + command + "' is not a valid accolite command. See accolite --help.\n")
-        sys.stderr.write("Did you mean '" + accolite.levenshteinbestmatch(command, accolitecommands) + "'?\n")
+        sys.stderr.write("Did you mean '" + accolite.levenshteinBestMatch(command, accolitecommands) + "'?\n")
         return 2
 
     # Call the corresponding command
-    argv[0] = accolite.scriptofcommand(argv[0])
+    argv[0] = accolite.scriptOfCommand(argv[0])
     return subprocess.call(argv)
 
 

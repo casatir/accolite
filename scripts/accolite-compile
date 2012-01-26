@@ -51,7 +51,7 @@ def main():
     makeargs.append("install")
 
     # Get working dir    
-    if accolite.workingdir() == "":
+    if accolite.workingDir() == "":
         sys.stderr.write("It seems that you are not in a working accolite project!\n")
         return 1
     builddir = accolite.absdir("build")

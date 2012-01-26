@@ -65,13 +65,13 @@ def main():
     # Populating tests dir
     for filename in ["TestRunner.h","ExampleTest.cpp"]:
         filecurr = open(os.path.abspath(os.path.join(testsdir, filename)), 'w')
-        filecurr.write(accolite.stringfile(filename))
+        filecurr.write(accolite.stringFile(filename))
         filecurr.close()
 
     # Populating cmakedir
     for filename in ["valgrind.supp","PathsDefinitions.cmake","ExamplesLinks.cmake","CMakeExamplesLists.cmake","CTestConfig.cmake","CTestDashboard.cmake","CMakeLists.txt","CMakeTestsLists.cmake","TestsLinks.cmake","Dependencies.cmake"]:
         filecurr = open(os.path.abspath(os.path.join(cmakedir, filename)), 'w')
-        filecurr.write(accolite.stringfile(filename))
+        filecurr.write(accolite.stringFile(filename))
         filecurr.close()
 
     # Populating modulesdir
@@ -79,7 +79,7 @@ def main():
     os.makedirs(modulesdir)
     for filename in ["FindCppUnit.cmake","FindValgrind.cmake","FindPkgMacros.cmake"]:
         filecurr = open(os.path.abspath(os.path.join(modulesdir, filename)), 'w')
-        filecurr.write(accolite.stringfile(filename))
+        filecurr.write(accolite.stringFile(filename))
         filecurr.close()
 
 
