@@ -28,7 +28,7 @@ foreach( test ${test_sources} )
   target_link_libraries( ${test_exe} <ACCOLITE_PROJECT_NAME_LOWER> )
   target_link_libraries( ${test_exe} ${CppUnit_LIBRARIES} )
   include( TestsLinks.cmake )
-  add_test( ${test_exe} ${BIN_PATH}/${test_exe} )
+  add_test( ${test_exe} ${<ACCOLITE_PROJECT_NAME_UPPER>_CMD_TEST_OPTION} ${BIN_PATH}/${test_exe} )
   message( "--   ${test_exe} done" )
 endforeach( test ${test_sources} )
 
