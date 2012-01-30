@@ -40,7 +40,7 @@ def levenshteinBestMatch(expr, possibles):
 
 # Get accolite install directory
 def installDir():
-    return os.path.dirname(sys.argv[0])
+    return os.path.abspath(os.path.dirname(sys.argv[0]))
 
 
 # Return possible accolite commands
@@ -80,11 +80,22 @@ def absdir(directory):
     return os.path.join(workingDir(), relativedir(directory))
 
 
-# Get the relative path of a project dir
+# Get the project name
 def projectName():
     configxml = xml.dom.minidom.parse(os.path.join(workingDir(),
                                                    ".accolite","config.xml"))
     return configxml.getElementsByTagName("projectname")[0].firstChild.data
+
+
+# Get the project name replacing non alphanumeric characters by sub
+def projectNameAlphaNum(sub):
+    listAlNum = []
+    for c in projectName():
+        if c.isalnum():
+            listAlNum.append(c)
+        else:
+            listAlNum.append(sub)
+    return "".join(listAlNum)
 
 
 # Create a minidom xml default config file
@@ -107,7 +118,7 @@ def stringFile(filename):
     fileToRead = open(filePath, "r")
     fileString = fileToRead.read()
     fileToRead.close()
-    pname = projectName()
+    pname = projectNameAlphaNum("_")
     fileString = re.sub("<ACCOLITE_PROJECT_NAME_LOWER>", pname.lower(), fileString)
     fileString = re.sub("<ACCOLITE_PROJECT_NAME_UPPER>", pname.upper(), fileString)
     fileString = re.sub("<ACCOLITE_PROJECT_NAME>", pname, fileString)
