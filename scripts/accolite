@@ -44,7 +44,7 @@ def main():
     # Check if the command is valide
     if command not in accoliteCommands:
         sys.stderr.write("accolite: '" + command + "' is not a valid accolite command. See accolite --help.\n")
-        sys.stderr.write("Did you mean '" + accolite.levenshteinBestMatch(command, accolitecommands) + "'?\n")
+        sys.stderr.write("Did you mean '" + accolite.levenshteinBestMatch(command, accoliteCommands) + "'?\n")
         return 2
 
     # Call the corresponding command
