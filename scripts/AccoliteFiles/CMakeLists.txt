@@ -44,6 +44,11 @@ file (
   )
 file (
   GLOB_RECURSE
+  lib_impls
+  ${SRC_PATH}/*.impl
+  )
+file (
+  GLOB_RECURSE
   lib_cpp
   ${SRC_PATH}/*.c
   ${SRC_PATH}/*.cpp
@@ -55,6 +60,8 @@ include_directories ( ${SRC_PATH} )
 add_library( <ACCOLITE_PROJECT_NAME_LOWER> SHARED
   ${lib_headers}
   ${lib_cpp}
+  ${lib_defs}
+  ${lib_impls}
   )
 target_link_libraries( <ACCOLITE_PROJECT_NAME_LOWER> ${<ACCOLITE_PROJECT_NAME_UPPER>_LIB_DEPENDENCIES} )
 
@@ -62,12 +69,12 @@ target_link_libraries( <ACCOLITE_PROJECT_NAME_LOWER> ${<ACCOLITE_PROJECT_NAME_UP
 ##########################
 # Library installation
 set( CMAKE_INSTALL_PREFIX ${<ACCOLITE_PROJECT_NAME_UPPER>_LIB_PATH} )
-foreach( header ${lib_headers} ${lib_defs} )
+foreach( header ${lib_headers} ${lib_defs} ${lib_impls} )
   # To preserve dyrectory hierarchy...
   string( REGEX REPLACE ${SRC_PATH}/ "" header_no_path ${header} )
   string( REGEX MATCH "(.*)[/\\]" header_dir ${header_no_path} )
   install( FILES ${header} DESTINATION include/${header_dir} )
-endforeach( header ${lib_headers} ${lib_defs} )
+endforeach( header ${lib_headers} ${lib_defs} ${lib_impls} )
 install( TARGETS <ACCOLITE_PROJECT_NAME_LOWER> LIBRARY DESTINATION lib )
 
 
