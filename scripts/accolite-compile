@@ -66,16 +66,25 @@ def main():
     if not os.path.exists(tmpdir):
         os.makedirs(tmpdir)
 
+
     # Set lasts arguments
     cmakeargs.insert(0, "cmake")
     cmakeargs.append(cmakedir)
     makeargs.insert(0, "make")
     sys.stdout.write("Runing cmake inside " + builddir + "\n")
-    if subprocess.Popen(cmakeargs, cwd=builddir).wait() == 0:
-        sys.stdout.write("Runing make\n")
-        return subprocess.Popen(makeargs, cwd=builddir).wait()
-    else:
-        return 3
+    try:
+        if subprocess.Popen(cmakeargs, cwd=builddir).wait() == 0:
+            sys.stdout.write("Runing make\n")
+            try:
+                return subprocess.Popen(makeargs, cwd=builddir).wait()
+            except OSError:
+                sys.stderr.write("Error: unable to find make.\n")
+                return 5
+        else:
+            return 3
+    except OSError:
+        sys.stderr.write("Error: unable to find cmake.\n")
+        return 4
 
 
 if __name__ == '__main__':
