@@ -65,7 +65,8 @@ def main():
     if subprocess.call([accolite.scriptOfCommand("compile"),"-b","Debug"]) == 0:
         # Check for valgrind
         try:
-            subprocess.Popen("valgrind").wait()
+            subprocess.Popen("valgrind",stderr=subprocess.STDOUT,\
+                             stdout=subprocess.PIPE).wait()
         except OSError:
             sys.stderr.write("Error: unable to find valgrind.\n")
             return 6
