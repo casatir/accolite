@@ -26,6 +26,10 @@ set( CTEST_BINARY_DIRECTORY ${BUILD_PATH} )
 # Processing tests
 ctest_start( ${MODEL} TRACK ${MODEL} )
 
+#########################
+# Set timeout to 20 minutes
+set(CTEST_TEST_TIMEOUT           "1200")
+
 
 ## -- UPDATE
 #ctest_update( SOURCE "${CTEST_SOURCE_DIRECTORY}" RETURN_VALUE res )
