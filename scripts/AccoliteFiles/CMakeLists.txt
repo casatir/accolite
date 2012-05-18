@@ -19,6 +19,7 @@ if( NOT CMAKE_BUILD_TYPE )
     " None Debug Release RelWithDebInfo MinSizeRel." FORCE )
 endif( NOT CMAKE_BUILD_TYPE )
 
+#add_definitions( -Wall -Werror )
 set( CMAKE_CXX_FLAGS "-Wall -Werror" )
 
 # Put executables in bin

@@ -28,7 +28,7 @@ ctest_start( ${MODEL} TRACK ${MODEL} )
 
 #########################
 # Set timeout to 20 minutes
-set(CTEST_TEST_TIMEOUT           "1200")
+set(CTEST_TEST_TIMEOUT           "4800")
 
 
 ## -- UPDATE
