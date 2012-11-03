@@ -2,6 +2,7 @@
 
 import sys
 import os
+import subprocess
 import accolite
 
 # Usage function
@@ -9,18 +10,23 @@ def usage(stream):
     stream.write("Usage: accolite-init [Options] <working dir>\n")
     stream.write("Options:\n")
     stream.write("--help, -h                  : \t This help message.\n")
+    stream.write("--type, -t <project type>   : \t Specify project type (\"c\" or \"cpp\").\n")
     stream.write("--config-file, -c <xml file>: \t Give a configuration file for initialize the project.\n")
 
 
 def main():
     # Preset options
     configfile = ""
+    projecttype = "cpp"
     # Get options
     argv = sys.argv[1:]
     while len(argv) > 0 and argv[0].startswith("-"):
         if argv[0] in ["--help","-h"]:
             usage(sys.stdout)
             return 0
+        elif argv[0] in ["--type","-t"]:
+            argv = argv[1:]
+            projecttype = argv[0]
         elif argv[0] in ["--config-file","-c"]:
             argv = argv[1:]
             configfile = argv[0]
@@ -36,15 +42,25 @@ def main():
         usage(sys.stderr)
         return 2
 
+    # check project type
+    if projecttype != "cpp" and projecttype != "c":
+        sys.stderr.write("Project type must be \"c\" or \"cpp\".\n")
+        usage(sys.stderr)
+        return 3
+
     # Set dirs
     rootdir = argv[0]
     accolitedir = os.path.abspath(os.path.join(rootdir, ".accolite"))
+    if os.path.isdir(accolitedir):
+        sys.stderr.write("Directory " + accolitedir + " allready exists.\n")
+        return 4
     os.makedirs(accolitedir)
+
     # Project name
     projectname = os.path.basename(os.path.abspath(rootdir))
     # Put the config file inside .accolite
     if configfile == "":
-        configxml = accolite.defaultxml(projectname)
+        configxml = accolite.defaultxml(projectname, projecttype)
     else:
         configxml = parse(configfile)
     configxmlfile = open(os.path.abspath(os.path.join(accolitedir, "config.xml")), 'w')
@@ -54,34 +70,7 @@ def main():
     # Go inside working dir
     os.chdir(rootdir)
 
-    # Creates dirsr
-    for directory in ["tests","cmake","src","examples","doc"]:
-        if accolite.relativedir(directory) != "":
-            os.makedirs(accolite.absdir(directory))
-    
-    cmakedir = accolite.absdir("cmake")
-    testsdir = accolite.absdir("tests")
-
-    # Populating tests dir
-    for filename in ["TestRunner.h","ExampleTest.cpp"]:
-        filecurr = open(os.path.abspath(os.path.join(testsdir, filename)), 'w')
-        filecurr.write(accolite.stringFile(filename))
-        filecurr.close()
-
-    # Populating cmakedir
-    for filename in ["valgrind.supp","PathsDefinitions.cmake","ExamplesLinks.cmake","CMakeExamplesLists.cmake","CTestConfig.cmake","CTestDashboard.cmake","CMakeLists.txt","CMakeTestsLists.cmake","TestsLinks.cmake","Dependencies.cmake"]:
-        filecurr = open(os.path.abspath(os.path.join(cmakedir, filename)), 'w')
-        filecurr.write(accolite.stringFile(filename))
-        filecurr.close()
-
-    # Populating modulesdir
-    modulesdir = os.path.join(cmakedir,"Modules")
-    os.makedirs(modulesdir)
-    for filename in ["FindCppUnit.cmake","FindValgrind.cmake","FindPkgMacros.cmake"]:
-        filecurr = open(os.path.abspath(os.path.join(modulesdir, filename)), 'w')
-        filecurr.write(accolite.stringFile(filename))
-        filecurr.close()
-
+    return subprocess.call([accolite.scriptOfCommand("update")])
 
 if __name__ == '__main__':
     sys.exit(main())

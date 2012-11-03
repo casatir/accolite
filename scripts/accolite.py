@@ -87,6 +87,17 @@ def projectName():
     return configxml.getElementsByTagName("projectname")[0].firstChild.data
 
 
+# Get the project type
+def projectType():
+    configxml = xml.dom.minidom.parse(os.path.join(workingDir(),
+                                                   ".accolite","config.xml"))
+    elements = configxml.getElementsByTagName("projecttype")
+    if elements.length > 0:
+        return elements[0].firstChild.data
+    else:
+        return "cpp"
+
+
 # Get the project name replacing non alphanumeric characters by sub
 def projectNameAlphaNum(sub):
     listAlNum = []
@@ -99,13 +110,18 @@ def projectNameAlphaNum(sub):
 
 
 # Create a minidom xml default config file
-def defaultxml(projectname):
+def defaultxml(projectname,projecttype):
     configxml = xml.dom.minidom.getDOMImplementation().createDocument(None, "accoliteconfig", None)
     rootnode = configxml.childNodes[0]
     # Project name
     newnode = configxml.createElement("projectname")
     newnode.appendChild(configxml.createTextNode(projectname))
     rootnode.appendChild(newnode)
+    # Project type
+    newnode = configxml.createElement("projecttype")
+    newnode.appendChild(configxml.createTextNode(projecttype))
+    rootnode.appendChild(newnode)
+    # Directories
     for directory in ["cmake","build","bin","tmp","src","tests","examples","doc"]:
         newnode = configxml.createElement(directory + "dir")
         newnode.appendChild(configxml.createTextNode(directory))
@@ -114,7 +130,7 @@ def defaultxml(projectname):
     
 
 def stringFile(filename):
-    filePath = os.path.abspath(os.path.join(installDir(), "AccoliteFiles", filename))
+    filePath = os.path.abspath(os.path.join(installDir(), "AccoliteFiles/"+projectType(), filename))
     fileToRead = open(filePath, "r")
     fileString = fileToRead.read()
     fileToRead.close()
