@@ -54,9 +54,11 @@ def main():
 
     # Populating tests dir
     for filename in testdirlist:
-        filecurr = open(os.path.abspath(os.path.join(testsdir, filename)), 'w')
-        filecurr.write(accolite.stringFile(filename))
-        filecurr.close()
+        filepath = os.path.abspath(os.path.join(testsdir, filename))
+        if not os.path.isfile(filepath):
+            filecurr = open(filepath, 'w')
+            filecurr.write(accolite.stringFile(filename))
+            filecurr.close()
 
     # Populating cmakedir
     for filename in cmakedirlist:
