@@ -35,13 +35,13 @@ def main():
     if accolite.projectType() == "c":
         testdirlist = ["test_runner.h","example_test.c"]
         cmakedirlist = ["PathsDefinitions.cmake","CMakeExamplesLists.cmake","CTestConfig.cmake","CTestDashboard.cmake","CMakeLists.txt","CMakeTestsLists.cmake"]
-        cmakediruserlist = ["ExamplesLinks.cmake","TestsLinks.cmake","Dependencies.cmake"]
-        modulesdirlist = ["valgrind.supp","FindCUnit.cmake","FindValgrind.cmake","FindPkgMacros.cmake"]
+        cmakediruserlist = ["valgrind.supp","ExamplesLinks.cmake","TestsLinks.cmake","Dependencies.cmake"]
+        modulesdirlist = ["FindCUnit.cmake","FindValgrind.cmake","FindPkgMacros.cmake"]
     else:
         testdirlist = ["TestRunner.h","ExampleTest.cpp"]
         cmakedirlist = ["PathsDefinitions.cmake","CMakeExamplesLists.cmake","CTestConfig.cmake","CTestDashboard.cmake","CMakeLists.txt","CMakeTestsLists.cmake"]
-        cmakediruserlist = ["ExamplesLinks.cmake","TestsLinks.cmake","Dependencies.cmake"]
-        modulesdirlist = ["valgrind.supp","FindCppUnit.cmake","FindValgrind.cmake","FindPkgMacros.cmake"]
+        cmakediruserlist = ["valgrind.supp","ExamplesLinks.cmake","TestsLinks.cmake","Dependencies.cmake"]
+        modulesdirlist = ["FindCppUnit.cmake","FindValgrind.cmake","FindPkgMacros.cmake"]
 
     # Creates dirsr
     for directory in ["tests","cmake","src","examples","doc"]:
