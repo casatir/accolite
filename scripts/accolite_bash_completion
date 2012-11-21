@@ -1,0 +1,14 @@
+# Bash completion file for accolite commands
+
+_accolite()
+{
+    local cur availables_cmds
+    COMPREPLY=()
+    available_cmds=$(accolite cmds)
+    
+    cur="${COMP_WORDS[${COMP_CWORD}]}" # current arg
+    
+    COMPREPLY=( $(compgen -W "$available_cmds" -- $cur ) )
+}
+
+complete -F _accolite accolite
