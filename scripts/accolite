@@ -13,11 +13,15 @@ def usage(ostream):
     ostream.write("Options:\n")
     ostream.write("--help, -h             : \t This help message.\n")
     ostream.write("Possible accolite commands are:\n")
-    ostream.write("clean\tClean the working project\n")
-    ostream.write("compile\tCompile the working project\n")
-    ostream.write("init\tInitialize a new working project\n")
-    ostream.write("test\tRun tests on the working project\n")
-    ostream.write("update\tUpdate the working project version of accolite\n")
+    ostream.write("bash-completion\tPrint a tutorial for how to activate bash-completion for accolite\n")
+    ostream.write("clean\t\tClean the working project\n")
+    ostream.write("cmds\t\tPrint available accolite commands\n")
+    ostream.write("compile\t\tCompile the working project\n")
+    ostream.write("init\t\tInitialize a new working project\n")
+    ostream.write("install-dir\tPrint absolute path to the installation dir of accolite\n")
+    ostream.write("root\t\tPrint absolute path to the working accolite directory\n")
+    ostream.write("test\t\tRun tests on the working project\n")
+    ostream.write("update\t\tUpdate the working project version of accolite\n")
 
 
 def main():
