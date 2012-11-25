@@ -23,137 +23,225 @@ import os.path
 import xml.dom.minidom
 import re
 
-# Levenstein score function
-def levenshtein(a,b):
-    n, m = len(a), len(b)
-    if n > m:
-        # Make sure n <= m, to use O(min(n,m)) space
-        a,b = b,a
-        n,m = m,n
-        
-    current = range(n+1)
-    for i in range(1,m+1):
-        previous, current = current, [i]+[0]*n
-        for j in range(1,n+1):
-            add, delete = previous[j]+1, current[j-1]+1
-            change = previous[j-1]
-            if a[j-1] != b[i-1]:
-                change = change + 1
-            current[j] = min(add, delete, change)
-            
-    return current[n]
-
-
-# Best possibility for an expr in a list
-def levenshteinBestMatch(expr, possibles):
-    minExp = possibles[0]
-    min = levenshtein(expr, minExp)
-    for e in possibles:
-        score = levenshtein(expr,e)
-        if score < min:
-            min = score
-            minExp = e
-    return minExp
-
-
-# Get accolite install directory
+# Get the directory where accolite is installed
 def installDir():
     return os.path.abspath(os.path.dirname(sys.argv[0]))
 
+# Get the location of the current working directory
+# or "" if we are not in an accolite project
+def workingDir():
+    def parDir(path):
+        return os.path.abspath(os.path.join(path, os.path.pardir))
+    def isAccoliteDir(path):
+        return os.path.isdir(os.path.join(path, ".accolite"))
+    def isRoot(path):
+        return path == parDir(path)
+    currentPath = os.path.abspath(os.path.curdir)
+    while not ( isAccoliteDir(currentPath) or isRoot(currentPath) ):
+        currentPath = parDir(currentPath)
+    if isAccoliteDir(currentPath):
+        return currentPath
+    return ""
 
-# Return possible accolite commands
-def availableCommands():
+# Is current directory inside an accolite project
+def isInsideAccoliteProject():
+    return workingDir() != ""
+
+# Available commands in iDir
+def availableCommandsInDir(iDir):
     commands = []
-    for cmd in os.listdir(installDir()):
+    for cmd in os.listdir(iDir):
         if cmd.startswith("accolite-"):
             commands.append(cmd[len("accolite-"):])
     return commands
 
+# Available accolite commands
+def availableCommands():
+    return availableCommandsInDir(installDir())
 
 # From an accolite commande to the path of its script
 def scriptOfCommand(cmd):
     return os.path.join(installDir(), "accolite-" + cmd)
 
-
-# Get working project dir
-def workingDir():
-    prevpath = ""
-    currentpath = os.path.abspath(os.path.curdir)
-    while not ( os.path.isdir(os.path.join(currentpath, ".accolite")) or currentpath == prevpath ):
-        prevpath = currentpath
-        currentpath = os.path.abspath(os.path.join(currentpath, os.path.pardir))
-    if currentpath == prevpath and not os.path.isdir(os.path.join(currentpath, ".accolite")):
-        return ""
-    return currentpath
-
-
-# Get the relative path of a project dir
-def relativedir(directory):
-    configxml = xml.dom.minidom.parse(os.path.join(workingDir(),
-                                                   ".accolite","config.xml"))
-    return configxml.getElementsByTagName(directory + "dir")[0].firstChild.data
-
-# Get the absolute path of a project dir
-def absdir(directory):
-    return os.path.join(workingDir(), relativedir(directory))
-
-
-# Get the project name
-def projectName():
-    configxml = xml.dom.minidom.parse(os.path.join(workingDir(),
-                                                   ".accolite","config.xml"))
-    return configxml.getElementsByTagName("projectname")[0].firstChild.data
-
-
-# Get the project type
-def projectType():
-    configxml = xml.dom.minidom.parse(os.path.join(workingDir(),
-                                                   ".accolite","config.xml"))
-    elements = configxml.getElementsByTagName("projecttype")
-    if elements.length > 0:
-        return elements[0].firstChild.data
-    else:
-        return "cpp"
-
-
-# Get the project name replacing non alphanumeric characters by sub
-def projectNameAlphaNum(sub):
-    listAlNum = []
-    for c in projectName():
-        if c.isalnum():
-            listAlNum.append(c)
+# Accolite project type
+class AccoliteType:
+    # Availables types
+    C, CPP = range(2)
+    # Conversions
+    @staticmethod
+    def fromTypeToStr(t):
+        if t == AccoliteType.C:
+            return "c"
         else:
-            listAlNum.append(sub)
-    return "".join(listAlNum)
+            return "cpp"
+    @staticmethod
+    def fromStrToType(s):
+        if s.lower() == "c":
+            return AccoliteType.C
+        else:
+            return AccoliteType.CPP
 
+class AccoliteProject:
+    class AccoliteDir:
+        def __init__(self, defaultName, realName):
+            self.defaultName = defaultName
+            self.realName = realName
 
-# Create a minidom xml default config file
-def defaultxml(projectname,projecttype):
-    configxml = xml.dom.minidom.getDOMImplementation().createDocument(None, "accoliteconfig", None)
-    rootnode = configxml.childNodes[0]
-    # Project name
-    newnode = configxml.createElement("projectname")
-    newnode.appendChild(configxml.createTextNode(projectname))
-    rootnode.appendChild(newnode)
-    # Project type
-    newnode = configxml.createElement("projecttype")
-    newnode.appendChild(configxml.createTextNode(projecttype))
-    rootnode.appendChild(newnode)
-    # Directories
-    for directory in ["cmake","build","bin","tmp","src","tests","examples","doc"]:
-        newnode = configxml.createElement(directory + "dir")
-        newnode.appendChild(configxml.createTextNode(directory))
-        rootnode.appendChild(newnode)
-    return configxml
+    def __init__(self, projectName = "AccoliteProject", projectType = "cpp"):
+        if isInsideAccoliteProject():
+            self.initFromXML()
+        else:
+            self.initFromArgs(projectName, projectType)
+
+    def initFromXML(self):
+        # wdir
+        self._workingDir = workingDir()
+        configxml = xml.dom.minidom.parse(self.xmlLocation())
+        # name
+        self._name = configxml.getElementsByTagName("projectname")[0].firstChild.data
+        # type
+        self._type = AccoliteType.CPP
+        elements = configxml.getElementsByTagName("projecttype")
+        if elements.length > 0:
+            self._type = AccoliteType.fromStrToType(elements[0].firstChild.data)
+        # dirs
+        self._dirs = []
+        for d in self.relativeDirs():
+            self._dirs.append(AccoliteProject.AccoliteDir(d, configxml.getElementsByTagName(\
+                        d + "dir")[0].firstChild.data))
+
+    def initFromArgs(self, projectName, projectType):
+        # wdir
+        self._workingDir = os.path.abspath(os.path.curdir)
+        aDir = self.accoliteDir()
+        if not os.path.isdir(aDir):
+            os.makedirs(aDir)
+        # name
+        self._name = projectName
+        # type
+        self._type = AccoliteType.fromStrToType(projectType)
+        # dirs
+        self._dirs = []
+        for d in self.relativeMandatoryDirs():
+            self._dirs.append(AccoliteProject.AccoliteDir(d,d))
+            dirPath = os.path.abspath(os.path.join(self.workingDir(), d))
+            if not os.path.isdir(dirPath):
+                os.makedirs(dirPath)
+        for d in self.relativeCleanedDirs():
+            self._dirs.append(AccoliteProject.AccoliteDir(d,d))
+            
+        # xml data
+        configxmlfile = open(os.path.join(aDir, "config.xml"), 'w')
+        self.toXML().writexml(configxmlfile)
+        configxmlfile.close()
+
+    # Get working project dir
+    def workingDir(self):
+        return self._workingDir
+
+    def xmlLocation(self):
+        return os.path.join(self.accoliteDir(), "config.xml")
+
+    def accoliteDir(self):
+        return os.path.abspath(os.path.join(self.workingDir(), ".accolite"))
+
+    # Get the relative path of a project dir
+    def relativeDir(self, directory):
+        for d in self._dirs:
+            if d.defaultName == directory:
+                return d.realName
+        return ""
     
+    @staticmethod
+    def relativeDirs():
+        res = AccoliteProject.relativeMandatoryDirs()
+        res.extend(AccoliteProject.relativeCleanedDirs())
+        return res
+    @staticmethod
+    def relativeMandatoryDirs():
+        return ["cmake","src","tests","examples","doc"]
+    @staticmethod
+    def relativeCleanedDirs():
+        return ["bin","build","tmp"]
 
-def stringFile(filename):
-    filePath = os.path.abspath(os.path.join(installDir(), "AccoliteFiles/"+projectType(), filename))
-    fileToRead = open(filePath, "r")
-    fileString = fileToRead.read()
-    fileToRead.close()
-    pname = projectNameAlphaNum("_")
-    fileString = re.sub("<ACCOLITE_PROJECT_NAME_LOWER>", pname.lower(), fileString)
-    fileString = re.sub("<ACCOLITE_PROJECT_NAME_UPPER>", pname.upper(), fileString)
-    fileString = re.sub("<ACCOLITE_PROJECT_NAME>", pname, fileString)
-    return fileString
+    # Get the absolute path of a project dir
+    def absDir(self, directory):
+        return os.path.join(self.workingDir(), self.relativeDir(directory))
+    
+    # Absolute paths to mandatory directorys
+    def mandatoryAbsDirs(self):
+        return map(self.absDir, self.relativeMandatoryDirs())
+
+    # Get the project name
+    def projectName(self):
+        return self._name
+
+    # Get the project type
+    def projectType(self):
+        return self._type
+
+    # Get the project name replacing non alphanumeric characters by sub
+    def projectNameAlphaNum(self, sub):
+        listAlNum = []
+        for c in self.projectName():
+            if c.isalnum():
+                listAlNum.append(c)
+            else:
+                listAlNum.append(sub)
+        return "".join(listAlNum)
+
+    # Create a minidom xml config file
+    def toXML(self):
+        configxml = xml.dom.minidom.getDOMImplementation().createDocument(None, "accoliteconfig", None)
+        rootnode = configxml.childNodes[0]
+        # Project name
+        newnode = configxml.createElement("projectname")
+        newnode.appendChild(configxml.createTextNode(self.projectName()))
+        rootnode.appendChild(newnode)
+        # Project type
+        newnode = configxml.createElement("projecttype")
+        newnode.appendChild(configxml.createTextNode(AccoliteType.fromTypeToStr(self.projectType())))
+        rootnode.appendChild(newnode)
+        # Directories
+        for d in self._dirs:
+            newnode = configxml.createElement(d.defaultName + "dir")
+            newnode.appendChild(configxml.createTextNode(d.realName))
+            rootnode.appendChild(newnode)
+        return configxml
+    
+    # Convert a project file to a string with substitution
+    def fileToString(self,fileName):
+        filePath = os.path.join(installDir(), "AccoliteFiles/" \
+                                    + AccoliteType.fromTypeToStr(self.projectType()), fileName)
+        fileToRead = open(filePath, "r")
+        fileString = fileToRead.read()
+        fileToRead.close()
+        pName = self.projectNameAlphaNum("_")
+        fileString = re.sub("<ACCOLITE_PROJECT_NAME_LOWER>", pName.lower(), fileString)
+        fileString = re.sub("<ACCOLITE_PROJECT_NAME_UPPER>", pName.upper(), fileString)
+        fileString = re.sub("<ACCOLITE_PROJECT_NAME>", pName, fileString)
+        return fileString
+
+    def copyAccoliteFiles(self,dirName,erase):
+        proprietaryPath = os.path.join(installDir(), "AccoliteFiles/",\
+                                           AccoliteType.fromTypeToStr(self.projectType()),\
+                                           dirName)
+        for dirname, dirnames, filenames in os.walk(proprietaryPath):
+            for f in filenames:
+                accoliteFilePath = os.path.join(dirname,f)
+                pathList = accoliteFilePath[len(proprietaryPath)+1:].split('/')
+                pathList[0] = self.absDir(pathList[0])
+                filePath = "/".join(pathList)
+                dirPath = os.path.dirname(filePath)
+                if not os.path.isdir(dirPath):
+                    os.makedirs(dirPath)
+                if erase or not (erase or os.path.isfile(filePath)):
+                    fileCurr = open(filePath, 'w')
+                    fileCurr.write(self.fileToString(accoliteFilePath))
+                    fileCurr.close()
+
+    def copyProprietaryFiles(self):
+        self.copyAccoliteFiles("proprietary", True)
+
+    def copyUserFiles(self):
+        self.copyAccoliteFiles("user", False)

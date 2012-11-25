@@ -30,26 +30,16 @@ def usage(stream):
     
 
 def main():
-    rootdir = accolite.workingDir()
-    if rootdir == "":
+    if not accolite.isInsideAccoliteProject():
         sys.stderr.write("It seems that you are not in a working accolite project!\n")
         return 1
-    builddir = accolite.absdir("build")
-    bindir = accolite.absdir("bin")
-    tmpdir = accolite.absdir("tmp")
-    if os.path.isdir(builddir):
-        sys.stdout.write("Deleting " + builddir + "... ");
-        shutil.rmtree(builddir)
-        sys.stdout.write("Done.\n");
-    if os.path.isdir(bindir):
-        sys.stdout.write("Deleting " + bindir + "... ");
-        shutil.rmtree(bindir)
-        sys.stdout.write("Done.\n");
-    if os.path.isdir(tmpdir):
-        sys.stdout.write("Deleting " + tmpdir + "... ");
-        shutil.rmtree(tmpdir)
-        sys.stdout.write("Done.\n");
-    
+
+    project = accolite.AccoliteProject()
+    for d in map(project.absDir, project.relativeCleanedDirs()):
+        if os.path.isdir(d):
+            print "Deleting " + d + "... "
+            shutil.rmtree(d)
+            print "Done."
 
 if __name__ == "__main__":
     sys.exit(main())

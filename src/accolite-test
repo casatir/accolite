@@ -66,11 +66,12 @@ def main():
         subprocess.call(accolite.scriptOfCommand("clean"))
 
     # Get working dir   
-    if accolite.workingDir() == "":
+    if not accolite.isInsideAccoliteProject():
         sys.stderr.write("It seems that you are not in a working accolite project!\n")
         return 1
-    builddir = accolite.absdir("build")
-    cmakedir = accolite.absdir("cmake")
+    project = accolite.AccoliteProject()
+    builddir = project.absDir("build")
+    cmakedir = project.absDir("cmake")
 
     # Launch tests
     ctestargs.append("-S")

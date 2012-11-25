@@ -36,7 +36,7 @@ def usage(stream):
 def main():
     # Preset options
     configfile = ""
-    projecttype = "cpp"
+    projectType = "cpp"
     # Get options
     argv = sys.argv[1:]
     while len(argv) > 0 and argv[0].startswith("-"):
@@ -45,7 +45,7 @@ def main():
             return 0
         elif argv[0] in ["--type","-t"]:
             argv = argv[1:]
-            projecttype = argv[0]
+            projectType = argv[0]
         elif argv[0] in ["--config-file","-c"]:
             argv = argv[1:]
             configfile = argv[0]
@@ -62,32 +62,29 @@ def main():
         return 2
 
     # check project type
-    if projecttype != "cpp" and projecttype != "c":
+    if projectType.lower() not in ["cpp", "c"]:
         sys.stderr.write("Project type must be \"c\" or \"cpp\".\n")
         usage(sys.stderr)
         return 3
 
-    # Set dirs
-    rootdir = argv[0]
-    accolitedir = os.path.abspath(os.path.join(rootdir, ".accolite"))
-    if os.path.isdir(accolitedir):
-        sys.stderr.write("Directory " + accolitedir + " allready exists.\n")
-        return 4
-    os.makedirs(accolitedir)
-
+    # Get working directory
+    wDir = os.path.abspath(argv[0])
     # Project name
-    projectname = os.path.basename(os.path.abspath(rootdir))
-    # Put the config file inside .accolite
-    if configfile == "":
-        configxml = accolite.defaultxml(projectname, projecttype)
-    else:
-        configxml = parse(configfile)
-    configxmlfile = open(os.path.abspath(os.path.join(accolitedir, "config.xml")), 'w')
-    configxml.writexml(configxmlfile)
-    configxmlfile.close()
+    projectName = os.path.basename(wDir)
+    if not os.path.isdir(wDir):
+        os.makedirs(wDir)
+    os.chdir(wDir)
+    project = accolite.AccoliteProject(projectName, projectType)
 
-    # Go inside working dir
-    os.chdir(rootdir)
+    print "Warning: submiting xml not implemented"
+    # Put the config file inside .accolite
+    #if configfile == "":
+    #    configxml = accolite.defaultxml(projectname, projecttype)
+    #else:
+    #    configxml = parse(configfile)
+    #configxmlfile = open(os.path.abspath(os.path.join(accolitedir, "config.xml")), 'w')
+    #configxml.writexml(configxmlfile)
+    #configxmlfile.close()
 
     return subprocess.call([accolite.scriptOfCommand("update")])
 

@@ -1,0 +1,1 @@
+../../../cpp/proprietary/cmake/CTestConfig.cmake

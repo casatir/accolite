@@ -29,19 +29,19 @@ def usage(stream):
     stream.write("--help, -h                  : \t This help message.\n")
 
 def main():
-    sys.stdout.write("Assuming you are using bash.\n\
-To enable bash completion for accolite, just create\n\
-a file named .bash_completions in your home (~/) and put\n\
-in it the folowing lines:\n\
-    if $(command -v accolite-install-dir >/dev/null 2>&1)\\\n\
-       && [ -f $(accolite-install-dir)/accolite_bash_completion ]; then\n\
-        . $(accolite-install-dir)/accolite_bash_completion\n\
-    fi\n\
-Then add at the end of your .bashrc the folowing lines:\n\
-    if [ -f ~/.bash_completions ]; then\n\
-        . ~/.bash_completions\n\
-    fi\n\
-The completion will start once .bashrc will be sourced.\n")
+    print "Assuming you are using bash."
+    print "To enable bash completion for accolite, just create"
+    print "a file named .bash_completions in your home (~/) and put"
+    print "in it the folowing lines:"
+    print "    if $(command -v accolite-install-dir >/dev/null 2>&1)\\"
+    print "       && [ -f $(accolite-install-dir)/accolite_bash_completion ]; then"
+    print "        . $(accolite-install-dir)/accolite_bash_completion"
+    print "    fi"
+    print "Then add at the end of your .bashrc the folowing lines:"
+    print "    if [ -f ~/.bash_completions ]; then"
+    print "        . ~/.bash_completions"
+    print "    fi"
+    print "The completion will start once .bashrc will be sourced."
 
 if __name__ == '__main__':
     sys.exit(main())

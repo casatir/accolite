@@ -29,7 +29,7 @@ def usage(stream):
     stream.write("--help, -h                  : \t This help message.\n")
 
 def main():
-    sys.stdout.write(accolite.installDir() + "\n")
+    print accolite.installDir()
 
 if __name__ == '__main__':
     sys.exit(main())

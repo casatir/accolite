@@ -45,64 +45,13 @@ def main():
         # Shift argument
         argv = argv[1:]
 
-
-    wdir = accolite.workingDir()
-    if wdir == "":
+    if not accolite.isInsideAccoliteProject():
         sys.stderr.write("It seems that you are not in a working accolite project!\n")
         return 2
     
-    if accolite.projectType() == "c":
-        testdirlist = ["test_runner.h","example_test.c"]
-        cmakedirlist = ["PathsDefinitions.cmake","CMakeExamplesLists.cmake","CTestConfig.cmake","CTestDashboard.cmake","CMakeLists.txt","CMakeTestsLists.cmake"]
-        cmakediruserlist = ["valgrind.supp","ExamplesLinks.cmake","TestsLinks.cmake","Dependencies.cmake"]
-        modulesdirlist = ["FindCUnit.cmake","FindValgrind.cmake","FindPkgMacros.cmake"]
-    else:
-        testdirlist = ["TestRunner.h","ExampleTest.cpp"]
-        cmakedirlist = ["PathsDefinitions.cmake","CMakeExamplesLists.cmake","CTestConfig.cmake","CTestDashboard.cmake","CMakeLists.txt","CMakeTestsLists.cmake"]
-        cmakediruserlist = ["valgrind.supp","ExamplesLinks.cmake","TestsLinks.cmake","Dependencies.cmake"]
-        modulesdirlist = ["FindCppUnit.cmake","FindValgrind.cmake","FindPkgMacros.cmake"]
-
-    # Creates dirsr
-    for directory in ["tests","cmake","src","examples","doc"]:
-        absdirectory = accolite.absdir(directory)
-        if accolite.relativedir(directory) != "" and not os.path.isdir(absdirectory):
-            os.makedirs(absdirectory)
-
-    cmakedir = accolite.absdir("cmake")
-    testsdir = accolite.absdir("tests")
-
-    # Populating tests dir
-    for filename in testdirlist:
-        filepath = os.path.abspath(os.path.join(testsdir, filename))
-        if not os.path.isfile(filepath):
-            filecurr = open(filepath, 'w')
-            filecurr.write(accolite.stringFile(filename))
-            filecurr.close()
-
-    # Populating cmakedir
-    for filename in cmakedirlist:
-        filecurr = open(os.path.abspath(os.path.join(cmakedir, filename)), 'w')
-        filecurr.write(accolite.stringFile(filename))
-        filecurr.close()
-
-    # Treating users files
-    for filename in cmakediruserlist:
-        filepath = os.path.abspath(os.path.join(cmakedir, filename))
-        if not os.path.isfile(filepath):
-            filecurr = open(filepath, 'w')
-            filecurr.write(accolite.stringFile(filename))
-            filecurr.close()
-        
-
-    # Populating modulesdir
-    modulesdir = os.path.join(cmakedir,"Modules")
-    if not os.path.isdir(modulesdir):
-        os.makedirs(modulesdir)
-    for filename in modulesdirlist:
-        filecurr = open(os.path.abspath(os.path.join(modulesdir, filename)), 'w')
-        filecurr.write(accolite.stringFile(filename))
-        filecurr.close()
-
+    project = accolite.AccoliteProject()
+    project.copyProprietaryFiles()
+    project.copyUserFiles()
 
 if __name__ == '__main__':
     sys.exit(main())

@@ -33,7 +33,7 @@ def main():
     if wdir == "":
         sys.stderr.write("It seems that you are not in a working accolite project!\n")
         return 1
-    sys.stdout.write(wdir + "\n")
+    print wdir
 
 if __name__ == '__main__':
     sys.exit(main())
