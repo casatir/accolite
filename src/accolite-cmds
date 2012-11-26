@@ -31,7 +31,7 @@ def usage(stream):
 def main():
     commands = sorted(accolite.availableCommands())
     for cmd in commands:
-       print cmd
+       print(cmd)
 
 if __name__ == '__main__':
     sys.exit(main())

@@ -90,10 +90,10 @@ def main():
     cmakeargs.insert(0, "cmake")
     cmakeargs.append(cmakedir)
     makeargs.insert(0, "make")
-    print "Runing cmake inside " + builddir
+    print("Runing cmake inside " + builddir)
     try:
         if subprocess.Popen(cmakeargs, cwd=builddir).wait() == 0:
-            print "Runing make"
+            print("Runing make")
             try:
                 return subprocess.Popen(makeargs, cwd=builddir).wait()
             except OSError:

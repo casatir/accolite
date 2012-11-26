@@ -76,7 +76,7 @@ def main():
     os.chdir(wDir)
     project = accolite.AccoliteProject(projectName, projectType)
 
-    print "Warning: submiting xml not implemented"
+    print("Warning: submiting xml not implemented")
     # Put the config file inside .accolite
     #if configfile == "":
     #    configxml = accolite.defaultxml(projectname, projecttype)
