@@ -21,7 +21,7 @@ cmake_minimum_required( VERSION 2.6 )
 
 ##########################
 # Project name
-project( <ACCOLITE_PROJECT_NAME> )
+project( <ACCOLITE_PROJECT_NAME> C )
 
 ##########################
 # Include paths definitions
@@ -83,6 +83,7 @@ add_library( <ACCOLITE_PROJECT_NAME_LOWER> SHARED
   ${lib_defs}
   ${lib_impls}
   )
+set_target_properties( <ACCOLITE_PROJECT_NAME_LOWER> PROPERTIES LINKER_LANGUAGE C )
 target_link_libraries( <ACCOLITE_PROJECT_NAME_LOWER> ${<ACCOLITE_PROJECT_NAME_UPPER>_LIB_DEPENDENCIES} )
 
 

@@ -21,7 +21,10 @@ cmake_minimum_required( VERSION 2.6 )
 
 ##########################
 # Project name
-project( <ACCOLITE_PROJECT_NAME> )
+project( <ACCOLITE_PROJECT_NAME> CXX )
+
+# ${<ACCOLITE_PROJECT_NAME>_BINARY_DIR} now points to the build dir
+# ${<ACCOLITE_PROJECT_NAME>_SOURCE_DIR} now points to the src dir
 
 ##########################
 # Include paths definitions
@@ -58,6 +61,7 @@ file (
   lib_headers
   ${SRC_PATH}/*.h
   ${SRC_PATH}/*.hpp
+  ${SRC_PATH}/*.hh
   )
 file (
   GLOB_RECURSE
@@ -74,6 +78,8 @@ file (
   lib_cpp
   ${SRC_PATH}/*.c
   ${SRC_PATH}/*.cpp
+  ${SRC_PATH}/*.cxx
+  ${SRC_PATH}/*.cc
   )
 include_directories ( ${SRC_PATH} )
 
@@ -85,6 +91,7 @@ add_library( <ACCOLITE_PROJECT_NAME_LOWER> SHARED
   ${lib_defs}
   ${lib_impls}
   )
+set_target_properties( <ACCOLITE_PROJECT_NAME_LOWER> PROPERTIES LINKER_LANGUAGE CXX )
 target_link_libraries( <ACCOLITE_PROJECT_NAME_LOWER> ${<ACCOLITE_PROJECT_NAME_UPPER>_LIB_DEPENDENCIES} )
 
 
