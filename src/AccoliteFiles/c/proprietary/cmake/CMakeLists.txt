@@ -21,7 +21,7 @@ cmake_minimum_required( VERSION 2.6 )
 
 ##########################
 # Project name
-project( <ACCOLITE_PROJECT_NAME> C )
+project( <ACCOLITE_PROJECT_NAME> )
 
 ##########################
 # Include paths definitions

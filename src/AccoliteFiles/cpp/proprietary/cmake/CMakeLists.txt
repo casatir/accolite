@@ -21,7 +21,7 @@ cmake_minimum_required( VERSION 2.6 )
 
 ##########################
 # Project name
-project( <ACCOLITE_PROJECT_NAME> CXX )
+project( <ACCOLITE_PROJECT_NAME> )
 
 # ${<ACCOLITE_PROJECT_NAME>_BINARY_DIR} now points to the build dir
 # ${<ACCOLITE_PROJECT_NAME>_SOURCE_DIR} now points to the src dir
