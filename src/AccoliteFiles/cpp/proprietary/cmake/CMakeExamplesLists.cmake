@@ -33,6 +33,9 @@ file(
   GLOB_RECURSE
   example_sources
   ${EXAMPLES_PATH}/*.cpp
+  ${EXAMPLES_PATH}/*.cxx
+  ${EXAMPLES_PATH}/*.cc
+  ${EXAMPLES_PATH}/*.c
   )
 
 ##########################

@@ -34,6 +34,9 @@ file(
   GLOB_RECURSE
   test_sources
   ${TESTS_PATH}/*.cpp
+  ${TESTS_PATH}/*.cxx
+  ${TESTS_PATH}/*.cc
+  ${TESTS_PATH}/*.c
   )
 
 ##########################
