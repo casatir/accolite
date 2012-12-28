@@ -37,7 +37,7 @@ def main():
     project = accolite.AccoliteProject()
     for d in map(project.absDir, project.relativeCleanedDirs()):
         if os.path.isdir(d):
-            print("Deleting " + d + "... ")
+            sys.stdout.write("Deleting " + d + "... ")
             shutil.rmtree(d)
             print("Done.")
 
