@@ -37,11 +37,11 @@ file(
 
 ##########################
 # Add examples
-message( "-- Adding examples" )
+message( STATUS "Adding examples" )
 foreach( example ${example_sources} )
   get_filename_component( example_exe ${example} NAME_WE)
   add_executable( ${example_exe} ${example} )
   target_link_libraries( ${example_exe} <ACCOLITE_PROJECT_NAME_LOWER> )
   include( ExamplesLinks.cmake )
-  message( "--   ${example_exe} done" )
+  message( STATUS "  ${example_exe} done" )
 endforeach( example ${example_sources} )
