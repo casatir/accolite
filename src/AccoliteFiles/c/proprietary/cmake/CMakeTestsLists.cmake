@@ -35,6 +35,7 @@ file(
   test_sources
   ${TESTS_PATH}/*.c
   )
+set_source_files_properties( ${test_sources}  PROPERTIES LANGUAGE C )
 
 ##########################
 # Add tests

@@ -92,6 +92,7 @@ add_library( <ACCOLITE_PROJECT_NAME_LOWER> SHARED
   ${lib_impls}
   )
 set_target_properties( <ACCOLITE_PROJECT_NAME_LOWER> PROPERTIES LINKER_LANGUAGE CXX )
+set_source_files_properties( ${lib_cpp}  PROPERTIES LANGUAGE CXX )
 target_link_libraries( <ACCOLITE_PROJECT_NAME_LOWER> ${<ACCOLITE_PROJECT_NAME_UPPER>_LIB_DEPENDENCIES} )
 
 

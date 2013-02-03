@@ -38,6 +38,7 @@ file(
   ${TESTS_PATH}/*.cc
   ${TESTS_PATH}/*.c
   )
+set_source_files_properties( ${test_sources}  PROPERTIES LANGUAGE CXX )
 
 ##########################
 # Add tests

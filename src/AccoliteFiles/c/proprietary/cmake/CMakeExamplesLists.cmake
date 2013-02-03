@@ -34,6 +34,7 @@ file(
   example_sources
   ${EXAMPLES_PATH}/*.c
   )
+set_source_files_properties( ${example_sources}  PROPERTIES LANGUAGE C )
 
 ##########################
 # Add examples

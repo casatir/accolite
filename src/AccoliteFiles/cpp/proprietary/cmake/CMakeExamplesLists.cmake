@@ -37,6 +37,7 @@ file(
   ${EXAMPLES_PATH}/*.cc
   ${EXAMPLES_PATH}/*.c
   )
+set_source_files_properties( ${example_sources}  PROPERTIES LANGUAGE CXX )
 
 ##########################
 # Add examples
