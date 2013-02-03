@@ -40,7 +40,7 @@ endif( NOT CMAKE_BUILD_TYPE )
 
 # Treat all warnings as errors
 if( CMAKE_COMPILER_IS_GNUCC )
-  set( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -Werror -Wconversion -std=gnu99" )
+  set( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -Werror -std=gnu99" )
 endif( CMAKE_COMPILER_IS_GNUCC )
 
 # Put executables in bin

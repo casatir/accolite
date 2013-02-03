@@ -43,7 +43,7 @@ endif( NOT CMAKE_BUILD_TYPE )
 
 # Treat all warnings as errors
 if( CMAKE_COMPILER_IS_GNUCXX )
-  set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Werror -Wconversion" )
+  set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Werror" )
 endif( CMAKE_COMPILER_IS_GNUCXX )
 
 # Put executables in bin
