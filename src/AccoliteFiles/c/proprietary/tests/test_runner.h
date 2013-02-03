@@ -47,6 +47,6 @@
       }                                                 \
       /* trick to allow semicolon at the end of the macro call */       \
       /* adding such variable is not costly, ... we are in tests... */  \
-      static const char _<ACCOLITE_PROJECT_NAME_LOWER>_test_dummy_variable_
+      static const unsigned char _<ACCOLITE_PROJECT_NAME_LOWER>_test_dummy_variable_ = 0
 
 #endif // ! _<ACCOLITE_PROJECT_NAME_UPPER>_TEST_RUNNER_H_INCLUDED_
