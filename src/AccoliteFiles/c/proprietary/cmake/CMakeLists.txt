@@ -40,7 +40,7 @@ endif( NOT CMAKE_BUILD_TYPE )
 
 # Treat all warnings as errors
 if( CMAKE_COMPILER_IS_GNUCC )
-  set( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -ansi -pedantic -std=c99" )
+  set( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -pedantic -std=c99" )
   set( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -Werror" )
   set( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wconversion -Wwrite-strings" )
   set( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Winit-self -Wcast-align" )
