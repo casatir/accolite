@@ -43,7 +43,7 @@ def main():
     while len(argv) > 0 and argv[0].startswith("-"):
         if argv[0] in ["--help","-h"]:
             usage(sys.stdout)
-            return 1
+            return 2
         elif argv[0] in ["--clean-before","-c"]:
             cleanbefore = True
         elif argv[0] in ["--exclude-tests","-e"]:
@@ -57,7 +57,7 @@ def main():
         else:
             sys.stderr.write("Unknown option " + argv[0] + "!")
             usage(sys.stderr)
-            return 1
+            return 2
         # Shift argument
         argv = argv[1:]
 
@@ -68,7 +68,7 @@ def main():
     # Get working dir   
     if not accolite.isInsideAccoliteProject():
         sys.stderr.write("It seems that you are not in a working accolite project!\n")
-        return 1
+        return 3
     project = accolite.AccoliteProject()
     builddir = project.absDir("build")
     cmakedir = project.absDir("cmake")
@@ -89,14 +89,14 @@ def main():
                              stdout=subprocess.PIPE).wait()
         except OSError:
             sys.stderr.write("Error: unable to find valgrind.\n")
-            return 5
+            return 4
         if subprocess.call([accolite.scriptOfCommand("pretest")]) != 0:
-            return 6
+            return 5
         if subprocess.Popen(ctestargs, cwd = builddir).wait() == 0:
             return subprocess.call([accolite.scriptOfCommand("posttest")])
-        return 8
+        return 1
     else:
-        return 9
+        return 6
 
 
 if __name__ == '__main__':

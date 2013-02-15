@@ -58,7 +58,7 @@ def main():
         else:
             sys.stderr.write("Unknown option " + argv[0] + "!")
             usage(sys.stderr)
-            return 1
+            return 2
         # Shift argument
         argv = argv[1:]
 
@@ -93,7 +93,7 @@ def main():
     print("Runing cmake inside " + builddir)
 
     if subprocess.call([accolite.scriptOfCommand("precompile")]) != 0:
-        return 2
+        return 3
 
     try:
         if subprocess.Popen(cmakeargs, cwd=builddir).wait() == 0:
@@ -101,15 +101,15 @@ def main():
             try:
                 if subprocess.Popen(makeargs, cwd=builddir).wait() == 0:
                     return subprocess.call([accolite.scriptOfCommand("postcompile")])
-                return 6
+                return 1
             except OSError:
                 sys.stderr.write("Error: unable to find make.\n")
-                return 5
+                return 6
         else:
-            return 3
+            return 4
     except OSError:
         sys.stderr.write("Error: unable to find cmake.\n")
-        return 4
+        return 5
 
 
 if __name__ == '__main__':

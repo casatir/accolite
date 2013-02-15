@@ -29,8 +29,7 @@ include( PathsDefinitions.cmake )
 
 # Add a sensible build type default and warning because empty means no optimization and no debug info.
 if( NOT CMAKE_BUILD_TYPE )
-  message( "WARNING: CMAKE_BUILD_TYPE is not defined!
-"
+  message( "WARNING: CMAKE_BUILD_TYPE is not defined!"
     "         Defaulting to CMAKE_BUILD_TYPE=RelWithDebInfo."
     " Use ccmake to set a proper value." )
   set( CMAKE_BUILD_TYPE RelWithDebInfo CACHE STRING
