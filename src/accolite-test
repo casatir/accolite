@@ -89,10 +89,14 @@ def main():
                              stdout=subprocess.PIPE).wait()
         except OSError:
             sys.stderr.write("Error: unable to find valgrind.\n")
+            return 5
+        if subprocess.call([accolite.scriptOfCommand("pretest")]) != 0:
             return 6
-        return subprocess.Popen(ctestargs, cwd = builddir).wait()
+        if subprocess.Popen(ctestargs, cwd = builddir).wait() == 0:
+            return subprocess.call([accolite.scriptOfCommand("posttest")])
+        return 8
     else:
-        return 3
+        return 9
 
 
 if __name__ == '__main__':

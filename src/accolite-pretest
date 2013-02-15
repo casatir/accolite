@@ -1,0 +1,53 @@
+#!/usr/bin/env python
+#
+# Copyright (c) 2012 Casati Romain
+# All rights reserved.
+#
+# This file is part of Accolite.
+#
+# Accolite is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# Accolite is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Accolite.  If not, see <http://www.gnu.org/licenses/>
+
+
+import sys
+import os
+import subprocess
+import accolite
+
+# Usage function
+def usage(stream):
+    stream.write("Usage: accolite-pretest [Options]\n")
+    stream.write("Options:\n")
+    stream.write("--help, -h             : \t This help message.\n")
+
+def main():
+    # Get options
+    argv = sys.argv[1:]
+    while len(argv) > 0 and argv[0].startswith("-"):
+        if argv[0] in ["--help","-h"]:
+            usage(sys.stdout)
+            return 0
+        else:
+            sys.stderr.write("Unknown option " + argv[0] + "!")
+            usage(sys.stderr)
+            return 1
+        # Shift argument
+        argv = argv[1:]
+
+    project = accolite.AccoliteProject()
+    cmakedir = project.absDir("cmake")
+    script = project.prepostScript("pretest")
+    return subprocess.Popen(script, cwd = cmakedir).wait()
+
+if __name__ == '__main__':
+    sys.exit(main())

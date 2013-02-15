@@ -91,11 +91,17 @@ def main():
     cmakeargs.append(cmakedir)
     makeargs.insert(0, "make")
     print("Runing cmake inside " + builddir)
+
+    if subprocess.call([accolite.scriptOfCommand("precompile")]) != 0:
+        return 2
+
     try:
         if subprocess.Popen(cmakeargs, cwd=builddir).wait() == 0:
             print("Runing make")
             try:
-                return subprocess.Popen(makeargs, cwd=builddir).wait()
+                if subprocess.Popen(makeargs, cwd=builddir).wait() == 0:
+                    return subprocess.call([accolite.scriptOfCommand("postcompile")])
+                return 6
             except OSError:
                 sys.stderr.write("Error: unable to find make.\n")
                 return 5
