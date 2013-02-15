@@ -19,7 +19,7 @@
 
 
 import sys
-import os.path
+import os
 import xml.dom.minidom
 import re
 
@@ -180,6 +180,10 @@ class AccoliteProject:
     def projectType(self):
         return self._type
 
+    # Get a pre/post scipt given by the cmd arg
+    def prepostScript(self,cmd):
+        return os.path.join(self.absDir("cmake"), cmd)
+
     # Get the project name replacing non alphanumeric characters by sub
     def projectNameAlphaNum(self, sub):
         listAlNum = []
@@ -229,6 +233,7 @@ class AccoliteProject:
         for dirname, dirnames, filenames in os.walk(proprietaryPath):
             for f in filenames:
                 accoliteFilePath = os.path.join(dirname,f)
+                permission = os.stat(accoliteFilePath).st_mode
                 pathList = accoliteFilePath[len(proprietaryPath)+1:].split('/')
                 pathList[0] = self.absDir(pathList[0])
                 filePath = "/".join(pathList)
@@ -236,9 +241,9 @@ class AccoliteProject:
                 if not os.path.isdir(dirPath):
                     os.makedirs(dirPath)
                 if erase or not (erase or os.path.isfile(filePath)):
-                    fileCurr = open(filePath, 'w')
-                    fileCurr.write(self.fileToString(accoliteFilePath))
-                    fileCurr.close()
+                    with os.fdopen(os.open(filePath, os.O_WRONLY | os.O_CREAT,
+                                           permission), 'w') as handle:
+                        handle.write(self.fileToString(accoliteFilePath))
 
     def copyProprietaryFiles(self):
         self.copyAccoliteFiles("proprietary", True)
