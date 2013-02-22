@@ -30,6 +30,7 @@ def usage(stream):
     stream.write("Usage: accolite-test [Options]\n")
     stream.write("Options:\n")
     stream.write("--help, -h               : \t This help message.\n")
+    stream.write("--build-type, -b <exp>   : \t Test in <mode> (default is Debug).\n")
     stream.write("--clean-before, -c       : \t Run clean-me first.\n")
     stream.write("--exclude-tests, -e <exp>: \t Exclude all tests whose names matchs regular expression <exp>.\n")
     stream.write("--only-test, -o <exp>    : \t Execute only tests whose names matchs regular expression <exp>.\n")
@@ -37,6 +38,7 @@ def usage(stream):
 def main():
     # Preset options
     cleanbefore = False
+    buildtype = "Debug"
     ctestargs = []
     # Get options
     argv = sys.argv[1:]
@@ -44,6 +46,9 @@ def main():
         if argv[0] in ["--help","-h"]:
             usage(sys.stdout)
             return 2
+        elif argv[0] in ["--build-type","-b"]:
+            argv = argv[1:]
+            buildtype = argv[0]
         elif argv[0] in ["--clean-before","-c"]:
             cleanbefore = True
         elif argv[0] in ["--exclude-tests","-e"]:
@@ -82,7 +87,7 @@ def main():
     ctestargs.insert(0, "ctest")
 
     # Compile in debug mode
-    if subprocess.call([accolite.scriptOfCommand("compile"),"-b","Debug"]) == 0:
+    if subprocess.call([accolite.scriptOfCommand("compile"),"-b",buildtype]) == 0:
         # Check for valgrind
         try:
             subprocess.Popen("valgrind",stderr=subprocess.STDOUT,\
