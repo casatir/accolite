@@ -94,7 +94,7 @@ def main():
             return 5
         if subprocess.Popen(ctestargs, cwd = builddir).wait() == 0:
             return subprocess.call([accolite.scriptOfCommand("posttest")])
-        return 1
+        return -1
     else:
         return 6
 
