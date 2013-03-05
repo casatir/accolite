@@ -40,7 +40,7 @@ def workingDir():
     while not ( isAccoliteDir(currentPath) or isRoot(currentPath) ):
         currentPath = parDir(currentPath)
     if isAccoliteDir(currentPath):
-        return currentPath
+        return currentPath.decode('utf-8')
     return ""
 
 # Is current directory inside an accolite project
