@@ -243,6 +243,7 @@ class AccoliteProject:
                 if erase or not (erase or os.path.isfile(filePath)):
                     with os.fdopen(os.open(filePath, os.O_WRONLY | os.O_CREAT,
                                            permission), 'w') as handle:
+                        handle.truncate()
                         handle.write(self.fileToString(accoliteFilePath))
 
     def copyProprietaryFiles(self):
