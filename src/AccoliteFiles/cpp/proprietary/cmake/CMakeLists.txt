@@ -32,12 +32,11 @@ include( PathsDefinitions.cmake )
 
 # Add a sensible build type default and warning because empty means no optimization and no debug info.
 if( NOT CMAKE_BUILD_TYPE )
-  message( "WARNING: CMAKE_BUILD_TYPE is not defined!"
-    "         Defaulting to CMAKE_BUILD_TYPE=RelWithDebInfo."
-    " Use ccmake to set a proper value." )
+  message( "WARNING: CMAKE_BUILD_TYPE is not defined!\n"
+    "  Defaulting to CMAKE_BUILD_TYPE=RelWithDebInfo.\n"
+    "  Use ccmake to set a proper value." )
   set( CMAKE_BUILD_TYPE RelWithDebInfo CACHE STRING
-    "Choose the type of build, options are:"
-    " None Debug Release RelWithDebInfo MinSizeRel." FORCE )
+    "Choose the type of build, options are:\n   None Debug Release RelWithDebInfo MinSizeRel." FORCE )
 endif( NOT CMAKE_BUILD_TYPE )
 
 # Treat all warnings as errors
