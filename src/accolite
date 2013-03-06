@@ -72,8 +72,9 @@ def main():
         return 2
 
     # Call the corresponding command
-    argv[0] = accolite.scriptOfCommand(argv[0])
-    return subprocess.call(argv)
+    cmdlist = [sys.executable,accolite.scriptOfCommand(argv[0])]
+    cmdlist.extend(argv[1:])
+    return subprocess.call(cmdlist)
 
 
 if __name__ == '__main__':
