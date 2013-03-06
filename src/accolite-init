@@ -86,7 +86,7 @@ def main():
     #configxml.writexml(configxmlfile)
     #configxmlfile.close()
 
-    return subprocess.call([accolite.scriptOfCommand("update")])
+    return subprocess.call([sys.executable,accolite.scriptOfCommand("update")])
 
 if __name__ == '__main__':
     sys.exit(main())
