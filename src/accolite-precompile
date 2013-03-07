@@ -47,7 +47,7 @@ def main():
     project = accolite.AccoliteProject()
     cmakedir = project.absDir("cmake")
     script = project.prepostScript("precompile")
-    return subprocess.Popen(script, cwd = cmakedir).wait()
+    return subprocess.call([sys.executable, script], cwd = cmakedir)
 
 if __name__ == '__main__':
     sys.exit(main())
