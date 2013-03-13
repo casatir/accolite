@@ -46,7 +46,7 @@ def main():
 
     project = accolite.AccoliteProject()
     cmakedir = project.absDir("cmake")
-    script = project.prepostScript("posttest")
+    script = project.prepostScript("posttest.py")
     return subprocess.call([sys.executable, script], cwd = cmakedir)
 
 if __name__ == '__main__':
