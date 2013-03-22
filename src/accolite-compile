@@ -96,10 +96,10 @@ def main():
         return 3
 
     try:
-        if subprocess.Popen(cmakeargs, cwd=builddir).wait() == 0:
+        if subprocess.call(cmakeargs, cwd=builddir) == 0:
             print("Runing make")
             try:
-                if subprocess.Popen(makeargs, cwd=builddir).wait() == 0:
+                if subprocess.call(makeargs, cwd=builddir) == 0:
                     return subprocess.call([sys.executable,accolite.scriptOfCommand("postcompile")])
                 return 1
             except OSError:

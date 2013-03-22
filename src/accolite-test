@@ -90,14 +90,14 @@ def main():
     if subprocess.call([sys.executable,accolite.scriptOfCommand("compile"),"-b",buildtype]) == 0:
         # Check for valgrind
         try:
-            subprocess.Popen("valgrind",stderr=subprocess.STDOUT,\
-                             stdout=subprocess.PIPE).wait()
+            subprocess.call("valgrind",stderr=subprocess.STDOUT,\
+                                stdout=subprocess.PIPE)
         except OSError:
             sys.stderr.write("Error: unable to find valgrind.\n")
             return 4
         if subprocess.call([sys.executable,accolite.scriptOfCommand("pretest")]) != 0:
             return 5
-        if subprocess.Popen(ctestargs, cwd = builddir).wait() == 0:
+        if subprocess.call(ctestargs, cwd = builddir) == 0:
             return subprocess.call([sys.executable,accolite.scriptOfCommand("posttest")])
         return -1
     else:
