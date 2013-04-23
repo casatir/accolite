@@ -10,6 +10,3 @@ You just have to focus on writing tests (unfortunatetly, it doesn't do this for 
 
 #  Start with accolite
 
-
-This project is developped by Romain Casati, please contact me at:
-first name dot last name at gmail dot com for bugs, remarks...
