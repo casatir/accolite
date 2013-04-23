@@ -20,10 +20,7 @@
 
 
 import sys
-import os
-import posixpath
 import subprocess
-import string
 import accolite
 import levenshtein
 
