@@ -241,6 +241,8 @@ class AccoliteProject:
                     os.makedirs(dirPath)
                 if erase or not (erase or os.path.isfile(filePath)):
                     if not os.path.isfile(accoliteFilePath) and os.path.islink(accoliteFilePath):
+                        if os.path.islink(filePath):
+                            os.remove(filePath)
                         os.symlink(os.readlink(accoliteFilePath), filePath)
                     else:
                         permission = os.stat(accoliteFilePath).st_mode
