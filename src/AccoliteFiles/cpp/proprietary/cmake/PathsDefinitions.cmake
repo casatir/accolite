@@ -22,20 +22,24 @@
 set( <ACCOLITE_PROJECT_NAME_UPPER>_PATH ${CMAKE_CURRENT_BINARY_DIR}/.. )
 
 ##########################
+# Cmake configuration files path
+set( CONFIGURATION_FILES_PATH ${<ACCOLITE_PROJECT_NAME_UPPER>_PATH}/cmake )
+
+##########################
+# Project folder under cmake configuration path (to bypass bug on coverage, see http://public.kitware.com/Bug/view.php?id=9678)
+set( <ACCOLITE_PROJECT_NAME_UPPER>_PATH_SRC ${CONFIGURATION_FILES_PATH}/Project )
+
+##########################
 # Src path
-set( SRC_PATH ${<ACCOLITE_PROJECT_NAME_UPPER>_PATH}/src )
+set( SRC_PATH ${<ACCOLITE_PROJECT_NAME_UPPER>_PATH_SRC}/src )
 
 ##########################
 # Examples path
-set( EXAMPLES_PATH ${<ACCOLITE_PROJECT_NAME_UPPER>_PATH}/examples )
+set( EXAMPLES_PATH ${<ACCOLITE_PROJECT_NAME_UPPER>_PATH_SRC}/examples )
 
 ##########################
 # Tests path
-set( TESTS_PATH ${<ACCOLITE_PROJECT_NAME_UPPER>_PATH}/tests )
-
-##########################
-# Cmake configuration files path
-set( CONFIGURATION_FILES_PATH ${<ACCOLITE_PROJECT_NAME_UPPER>_PATH}/cmake )
+set( TESTS_PATH ${<ACCOLITE_PROJECT_NAME_UPPER>_PATH_SRC}/tests )
 
 ##########################
 # Cmake created files path

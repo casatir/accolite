@@ -227,13 +227,12 @@ class AccoliteProject:
         return fileString
 
     def copyAccoliteFiles(self,dirName,erase):
-        proprietaryPath = os.path.join(installDir(), "AccoliteFiles/",\
-                                           AccoliteType.fromTypeToStr(self.projectType()),\
-                                           dirName)
+        proprietaryPath = os.path.join(installDir(), "AccoliteFiles/",
+                                       AccoliteType.fromTypeToStr(self.projectType()), dirName)
         for dirname, dirnames, filenames in os.walk(proprietaryPath):
-            for f in filenames:
+            for f in filenames + [d for d in dirnames
+                                  if os.path.islink(os.path.join(dirname, d))]:
                 accoliteFilePath = os.path.join(dirname,f)
-                permission = os.stat(accoliteFilePath).st_mode
                 pathList = accoliteFilePath[len(proprietaryPath)+1:].split('/')
                 pathList[0] = self.absDir(pathList[0])
                 filePath = "/".join(pathList)
@@ -241,10 +240,14 @@ class AccoliteProject:
                 if not os.path.isdir(dirPath):
                     os.makedirs(dirPath)
                 if erase or not (erase or os.path.isfile(filePath)):
-                    with os.fdopen(os.open(filePath, os.O_WRONLY | os.O_CREAT,
-                                           permission), 'w') as handle:
-                        handle.truncate()
-                        handle.write(self.fileToString(accoliteFilePath))
+                    if not os.path.isfile(accoliteFilePath) and os.path.islink(accoliteFilePath):
+                        os.symlink(os.readlink(accoliteFilePath), filePath)
+                    else:
+                        permission = os.stat(accoliteFilePath).st_mode
+                        with os.fdopen(os.open(filePath, os.O_WRONLY | os.O_CREAT,
+                                               permission), 'w') as handle:
+                            handle.truncate()
+                            handle.write(self.fileToString(accoliteFilePath))
 
     def copyProprietaryFiles(self):
         self.copyAccoliteFiles("proprietary", True)

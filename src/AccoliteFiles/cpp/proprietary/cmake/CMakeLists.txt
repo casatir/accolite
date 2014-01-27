@@ -44,6 +44,9 @@ if( CMAKE_COMPILER_IS_GNUCXX )
   set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Werror -Wconversion" )
 endif( CMAKE_COMPILER_IS_GNUCXX )
 
+# Coverage only in debug mode
+set( CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} --coverage" )
+
 # Put executables in bin
 set( EXECUTABLE_OUTPUT_PATH ${BIN_PATH} )
 

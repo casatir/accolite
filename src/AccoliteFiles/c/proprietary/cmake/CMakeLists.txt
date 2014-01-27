@@ -45,6 +45,9 @@ if( CMAKE_COMPILER_IS_GNUCC )
   set( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wcast-qual -Wpointer-arith" )
 endif( CMAKE_COMPILER_IS_GNUCC )
 
+# Coverage only in debug mode
+set( CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} --coverage" )
+
 # Put executables in bin
 set( EXECUTABLE_OUTPUT_PATH ${BIN_PATH} )
 

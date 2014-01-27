@@ -23,7 +23,7 @@ include( ${CMAKE_CURRENT_BINARY_DIR}/../cmake/PathsDefinitions.cmake )
 
 ##########################
 # We need valgrind
-find_package(Valgrind)
+find_package( Valgrind )
 if( VALGRIND_FOUND )
   set( CTEST_MEMORYCHECK_COMMAND ${VALGRIND_PROGRAM} )
   set( CTEST_MEMORYCHECK_SUPPRESSIONS_FILE ${CONFIGURATION_FILES_PATH}/valgrind.supp )
@@ -31,6 +31,13 @@ if( VALGRIND_FOUND )
     "-q --tool=memcheck --leak-check=full --show-reachable=yes --workaround-gcc296-bugs=yes --num-callers=50"
     )
 endif( VALGRIND_FOUND )
+
+##########################
+# We need gcov
+find_package( Gcov )
+if( GCOV_FOUND )
+  set( CTEST_COVERAGE_COMMAND ${GCOV_COMMAND} )
+endif( GCOV_FOUND )
 
 ##########################
 # Model analysis
@@ -67,6 +74,7 @@ if ( CTEST_MEMORYCHECK_COMMAND )
     message( FATAL_ERROR "Some tests fail." )
   endif( NOT ${res} EQUAL 0 )
 endif( CTEST_MEMORYCHECK_COMMAND )
+
 if ( CTEST_COVERAGE_COMMAND )
   ctest_coverage( BUILD  "${CTEST_BINARY_DIRECTORY}" RETURN_VALUE res )
   if( NOT ${res} EQUAL 0 )
