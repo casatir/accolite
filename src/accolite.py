@@ -167,7 +167,7 @@ class AccoliteProject:
     # Get the absolute path of a project dir
     def absDir(self, directory):
         return os.path.join(self.workingDir(), self.relativeDir(directory))
-    
+
     # Absolute paths to mandatory directorys
     def mandatoryAbsDirs(self):
         return map(self.absDir, self.relativeMandatoryDirs())
@@ -181,8 +181,8 @@ class AccoliteProject:
         return self._type
 
     # Get a pre/post scipt given by the cmd arg
-    def prepostScript(self,cmd):
-        return os.path.join(self.absDir("cmake"), cmd)
+    def prepostScript(self, cmd):
+        return os.path.join(self.absDir('cmake'), 'PrePostScripts', cmd)
 
     # Get the project name replacing non alphanumeric characters by sub
     def projectNameAlphaNum(self, sub):
