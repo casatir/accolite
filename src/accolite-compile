@@ -30,6 +30,7 @@ def usage(stream):
     stream.write("Usage: accolite-compile [Options]\n")
     stream.write("Options:\n")
     stream.write("--help, -h             : \t This help message.\n")
+    stream.write("--verbose, -v          : \t Verbose mode.\n")
     stream.write("--build-type, -b <type>: \t Specify a build type in Release RelWithDebInfo Debug DebugFull. Default is Release.\n")
     stream.write("--cmake-args, -c <args>: \t Specify arguments to pass to cmake. Default is \"-DCMAKE_BUILD_TYPE=<type-passed-to-b-option>\"\n")
     stream.write("--make-args, -m <args> : \t Specify arguments to pass to make. Default is \"-j<number-of-core+1> install\".\n")
@@ -46,6 +47,8 @@ def main():
         if argv[0] in ["--help","-h"]:
             usage(sys.stdout)
             return 0
+        if argv[0] in ["--verbose","-v"]:
+            makeargs.append('VERBOSE=1')
         elif argv[0] in ["--build-type","-b"]:
             argv = argv[1:]
             buildtype = argv[0]
