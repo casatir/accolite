@@ -97,7 +97,6 @@ def main():
     ctestargs.insert(0, "ctest")
 
     # Compile in debug mode
-    print(compileargs)
     if subprocess.call(compileargs) == 0:
         # Check for valgrind
         try:
