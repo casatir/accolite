@@ -38,7 +38,7 @@ endif( NOT CMAKE_BUILD_TYPE )
 
 # Treat all warnings as errors
 if( CMAKE_COMPILER_IS_GNUCC )
-  set( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -pedantic -std=c99" )
+  set( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -pedantic -fstrict-aliasing -std=c99" )
   set( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -Werror" )
   set( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wconversion -Wwrite-strings" )
   set( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Winit-self -Wcast-align" )
@@ -97,9 +97,9 @@ target_link_libraries( <ACCOLITE_PROJECT_NAME_LOWER> ${<ACCOLITE_PROJECT_NAME_UP
 # Library installation
 set( CMAKE_INSTALL_PREFIX ${<ACCOLITE_PROJECT_NAME_UPPER>_LIB_PATH} )
 foreach( header ${lib_headers} ${lib_defs} ${lib_impls} )
-  # To preserve dyrectory hierarchy...
+  # To preserve directory hierarchy...
   string( REGEX REPLACE ${SRC_PATH}/ "" header_no_path ${header} )
-  string( REGEX MATCH "(.*)[/\\]" header_dir ${header_no_path} )
+  get_filename_component(header_dir ${header_no_path} PATH)
   install( FILES ${header} DESTINATION include/${header_dir} )
 endforeach( header ${lib_headers} ${lib_defs} ${lib_impls} )
 install( TARGETS <ACCOLITE_PROJECT_NAME_LOWER> LIBRARY DESTINATION lib )

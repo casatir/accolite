@@ -41,7 +41,7 @@ def workingDir():
         currentPath = parDir(currentPath)
     if isAccoliteDir(currentPath):
         return currentPath.decode('utf-8')
-    return ""
+    return ''
 
 # Is current directory inside an accolite project
 def isInsideAccoliteProject():

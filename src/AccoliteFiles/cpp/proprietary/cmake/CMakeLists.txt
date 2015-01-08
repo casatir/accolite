@@ -41,7 +41,7 @@ endif( NOT CMAKE_BUILD_TYPE )
 
 # Treat all warnings as errors
 if( CMAKE_COMPILER_IS_GNUCXX )
-  set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Werror -Wconversion" )
+  set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fstrict-aliasing -Wall -Wextra -Werror -Wconversion" )
 endif( CMAKE_COMPILER_IS_GNUCXX )
 
 # Coverage only in debug mode
@@ -103,7 +103,7 @@ set( CMAKE_INSTALL_PREFIX ${<ACCOLITE_PROJECT_NAME_UPPER>_LIB_PATH} )
 foreach( header ${lib_headers} ${lib_defs} ${lib_impls} )
   # To preserve dyrectory hierarchy...
   string( REGEX REPLACE ${SRC_PATH}/ "" header_no_path ${header} )
-  string( REGEX MATCH "(.*)[/\\]" header_dir ${header_no_path} )
+  get_filename_component(header_dir ${header_no_path} PATH)
   install( FILES ${header} DESTINATION include/${header_dir} )
 endforeach( header ${lib_headers} ${lib_defs} ${lib_impls} )
 install( TARGETS <ACCOLITE_PROJECT_NAME_LOWER> LIBRARY DESTINATION lib )

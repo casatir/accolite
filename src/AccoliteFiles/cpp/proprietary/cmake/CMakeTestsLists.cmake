@@ -42,11 +42,10 @@ if( CppUnit_FOUND )
   set_source_files_properties( ${test_sources}  PROPERTIES LANGUAGE CXX )
 
   ##########################
-  # Add tests
+  # Add C++ tests
 
-  message( STATUS "Adding tests" )
+  message( STATUS "Adding C++ tests" )
   foreach( test ${test_sources} )
-    #string(REGEX REPLACE .cpp "" test_exe ${test} )
     get_filename_component( test_exe ${test} NAME_WE)
     add_executable( ${test_exe} ${test} )
     target_link_libraries( ${test_exe} <ACCOLITE_PROJECT_NAME_LOWER> )
@@ -56,10 +55,11 @@ if( CppUnit_FOUND )
     message( STATUS "  ${test_exe} done" )
   endforeach( test ${test_sources} )
 
-  ##########################
-  # Include CTestConfig.cmake
-  include( CTest )
 else( CppUnit_FOUND )
   message( STATUS
-    "WARNING: CppUnit library not found, tests will not be compiled." )
+    "WARNING: CppUnit library not found, C++ tests will not be added." )
 endif( CppUnit_FOUND )
+
+##########################
+# Include CTestConfig.cmake
+include( CTest )
